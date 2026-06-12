@@ -1,17 +1,19 @@
 /* ─────────────────────────────────────────────────────────────────
-   TRANSLATIONS
-   All UI strings for Arabic (ar) and English (en).
-   Add new keys to BOTH locales to keep them in sync.
+   TRANSLATIONS  —  ar + en
+   Add new keys to BOTH locales to stay in sync.
 ───────────────────────────────────────────────────────────────── */
 
-/** @type {Record<string, Translation>} */
 export const translations = {
   ar: {
-    // ── App identity ─────────────────────────────────────────────
-    appName:      "أوقات الصلاة",
-    appSubtitle:  "مواقيت الأذان والصلاة",
+    // ── App identity ──────────────────────────────────────────────
+    appName:     "أوقات الصلاة",
+    appSubtitle: "مواقيت الأذان والصلاة",
 
-    // ── City / location ──────────────────────────────────────────
+    // ── Tabs ──────────────────────────────────────────────────────
+    tabPrayer: "أوقات الصلاة",
+    tabQuran:  "القرآن الكريم",
+
+    // ── City / location ───────────────────────────────────────────
     cityLabel:      "اختر المدينة",
     searchCity:     "ابحث عن مدينة...",
     detectLocation: "تحديد موقعي",
@@ -30,7 +32,7 @@ export const translations = {
       Isha:    "العشاء",
     },
 
-    // ── Monthly table column headers ──────────────────────────────
+    // ── Monthly table columns ─────────────────────────────────────
     col: {
       day:     "اليوم",
       fajr:    "الفجر",
@@ -41,17 +43,18 @@ export const translations = {
       isha:    "العشاء",
     },
 
-    // ── Dates ────────────────────────────────────────────────────
+    // ── Dates ─────────────────────────────────────────────────────
     hijri:     "التاريخ الهجري",
     gregorian: "التاريخ الميلادي",
     today:     "اليوم",
+    backToToday: "العودة لهذا الشهر",
 
     // ── Countdown & state labels ──────────────────────────────────
     nextPrayer:   "متبقي حتى صلاة",
     nextLabel:    "القادمة",
     currentLabel: "الآن",
 
-    // ── Actions ──────────────────────────────────────────────────
+    // ── Actions ───────────────────────────────────────────────────
     retry:     "إعادة المحاولة",
     share:     "مشاركة",
     shareMsg:  "مواقيت الصلاة اليوم",
@@ -63,21 +66,23 @@ export const translations = {
     // ── Calculation method ────────────────────────────────────────
     method: "طريقة الحساب",
 
-    // ── Notifications ────────────────────────────────────────────
+    // ── Notifications ─────────────────────────────────────────────
     notifOn:         "الإشعارات مفعّلة",
     notifOff:        "الإشعارات معطّلة",
     notifPermission: "اسمح بالإشعارات",
 
-    // ── Monthly view ─────────────────────────────────────────────
+    // ── Monthly view ──────────────────────────────────────────────
     monthlyView:    "الجدول الشهري",
-    monthlyTitle:   "مواقيت الصلاة — الشهر الكامل",
+    monthlyTitle:   "مواقيت الصلاة",
     loadingMonthly: "جارٍ تحميل البيانات...",
+    prevMonth:      "الشهر السابق",
+    nextMonth:      "الشهر التالي",
 
     // ── Prayer tracker ────────────────────────────────────────────
     trackerTitle: "صلوات اليوم",
     prayersDone:  "مكتملة",
 
-    // ── Favorites ────────────────────────────────────────────────
+    // ── Favorites ─────────────────────────────────────────────────
     favoritesTitle: "المفضلة",
     addFavorite:    "أضف للمفضلة",
     removeFavorite: "إزالة من المفضلة",
@@ -88,14 +93,44 @@ export const translations = {
 
     // ── Loading / status ──────────────────────────────────────────
     loading: "جارٍ تحميل الأوقات...",
+
+    // ── Quran reader ──────────────────────────────────────────────
+    quranTitle:       "القرآن الكريم",
+    quranSearchPlaceholder: "ابحث عن سورة...",
+    quranAllSurahs:   "جميع السور",
+    quranMeccan:      "مكية",
+    quranMedinan:     "مدنية",
+    quranAyahs:       "آيات",
+    quranLoading:     "جارٍ تحميل القرآن...",
+    quranLoadingSurah:"جارٍ تحميل السورة...",
+    quranError:       "تعذّر تحميل البيانات",
+    quranShowTransl:  "إظهار الترجمة",
+    quranHideTransl:  "إخفاء الترجمة",
+    quranLastRead:    "آخر ما قرأت",
+    quranContinue:    "متابعة القراءة",
+    quranBismillah:   "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ",
+    quranVerse:       "آية",
+    quranFontSize:    "حجم الخط",
+    quranPrevSurah:   "السورة السابقة",
+    quranNextSurah:   "السورة التالية",
+    quranJuz:         "الجزء",
+    quranSurah:       "سورة",
+    quranMeccaTag:    "مكية",
+    quranMedinaTag:   "مدنية",
+    quranBackToList:  "قائمة السور",
+    quranNoResults:   "لا توجد سور مطابقة",
   },
 
   en: {
-    // ── App identity ─────────────────────────────────────────────
+    // ── App identity ──────────────────────────────────────────────
     appName:     "Prayer Times",
     appSubtitle: "Azan & Salah Times",
 
-    // ── City / location ──────────────────────────────────────────
+    // ── Tabs ──────────────────────────────────────────────────────
+    tabPrayer: "Prayer Times",
+    tabQuran:  "Holy Quran",
+
+    // ── City / location ───────────────────────────────────────────
     cityLabel:      "Select City",
     searchCity:     "Search a city...",
     detectLocation: "Detect My Location",
@@ -114,7 +149,7 @@ export const translations = {
       Isha:    "Isha",
     },
 
-    // ── Monthly table column headers ──────────────────────────────
+    // ── Monthly table columns ─────────────────────────────────────
     col: {
       day:     "Day",
       fajr:    "Fajr",
@@ -125,17 +160,18 @@ export const translations = {
       isha:    "Isha",
     },
 
-    // ── Dates ────────────────────────────────────────────────────
-    hijri:     "Hijri Date",
-    gregorian: "Gregorian Date",
-    today:     "Today",
+    // ── Dates ─────────────────────────────────────────────────────
+    hijri:       "Hijri Date",
+    gregorian:   "Gregorian Date",
+    today:       "Today",
+    backToToday: "Back to current month",
 
     // ── Countdown & state labels ──────────────────────────────────
     nextPrayer:   "Time until",
     nextLabel:    "Next",
     currentLabel: "Now",
 
-    // ── Actions ──────────────────────────────────────────────────
+    // ── Actions ───────────────────────────────────────────────────
     retry:     "Retry",
     share:     "Share",
     shareMsg:  "Today's Prayer Times",
@@ -147,21 +183,23 @@ export const translations = {
     // ── Calculation method ────────────────────────────────────────
     method: "Calculation Method",
 
-    // ── Notifications ────────────────────────────────────────────
+    // ── Notifications ─────────────────────────────────────────────
     notifOn:         "Notifications On",
     notifOff:        "Notifications Off",
     notifPermission: "Allow Notifications",
 
-    // ── Monthly view ─────────────────────────────────────────────
+    // ── Monthly view ──────────────────────────────────────────────
     monthlyView:    "Monthly",
-    monthlyTitle:   "Monthly Prayer Times",
+    monthlyTitle:   "Prayer Times",
     loadingMonthly: "Loading data...",
+    prevMonth:      "Previous month",
+    nextMonth:      "Next month",
 
     // ── Prayer tracker ────────────────────────────────────────────
     trackerTitle: "Today's Prayers",
     prayersDone:  "done",
 
-    // ── Favorites ────────────────────────────────────────────────
+    // ── Favorites ─────────────────────────────────────────────────
     favoritesTitle: "Favorites",
     addFavorite:    "Add to favorites",
     removeFavorite: "Remove from favorites",
@@ -172,11 +210,34 @@ export const translations = {
 
     // ── Loading / status ──────────────────────────────────────────
     loading: "Loading prayer times...",
+
+    // ── Quran reader ──────────────────────────────────────────────
+    quranTitle:       "The Holy Quran",
+    quranSearchPlaceholder: "Search a surah...",
+    quranAllSurahs:   "All Surahs",
+    quranMeccan:      "Meccan",
+    quranMedinan:     "Medinan",
+    quranAyahs:       "ayahs",
+    quranLoading:     "Loading Quran...",
+    quranLoadingSurah:"Loading surah...",
+    quranError:       "Failed to load data",
+    quranShowTransl:  "Show translation",
+    quranHideTransl:  "Hide translation",
+    quranLastRead:    "Last read",
+    quranContinue:    "Continue reading",
+    quranBismillah:   "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ",
+    quranVerse:       "Verse",
+    quranFontSize:    "Font size",
+    quranPrevSurah:   "Previous surah",
+    quranNextSurah:   "Next surah",
+    quranJuz:         "Juz",
+    quranSurah:       "Surah",
+    quranMeccaTag:    "Meccan",
+    quranMedinaTag:   "Medinan",
+    quranBackToList:  "Surah list",
+    quranNoResults:   "No surahs found",
   },
 };
 
-/** Supported locale codes */
-export const LOCALES = /** @type {const} */ (["ar", "en"]);
-
-/** Default locale */
+export const LOCALES      = /** @type {const} */ (["ar", "en"]);
 export const DEFAULT_LOCALE = "ar";
