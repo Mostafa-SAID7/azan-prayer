@@ -1,163 +1,96 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ColorModeContext } from "../theme";
-import {
-  IconButton,
-  useTheme,
-  Box,
-  Typography,
-  Stack,
-  List,
-  ListItemText,
-  MenuItem,
-  Menu,
-  ListItem,
-  Container,
-  
-} from "@mui/material";
-import {
-  DarkModeOutlined,
-  ExpandMore,
-  LightModeOutlined,
-} from "@mui/icons-material";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { useLang } from "../contexts/LanguageContext";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Sun, Moon, Languages } from "lucide-react";
 
-const options = ["AR", "EN"];
+export default function Top_Head() {
+  const { mode, toggleColorMode } = useContext(ColorModeContext);
+  const { lang, switchLang, t }   = useLang();
+  const isDark = mode === "dark";
 
-const Top_Head = () => {
-  const colorMode = useContext(ColorModeContext);
-  const theme = useTheme();
-
-  const [anchorEl, setAnchorEl] = useState (null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
-  const open = Boolean(anchorEl);
-
-  const handleClickListItem = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
-    <Box
-      sx={{
-       
-        background: " rgba(9,121,16,1)100% ",
-      }}
+    <header
+      className="app-header sticky top-0 z-40 shadow-[0_2px_20px_rgba(0,0,0,0.35)]"
+      style={{ animation: "headerIn 0.4s cubic-bezier(0.34,1.1,0.64,1) both" }}
     >
-     <Container>
-     <Stack direction={"row"} alignItems={"center"}>
-        <Typography
-          sx={{
-            mr: 2,
-            p: "3px 10px",
-            bgcolor: "#D23f57",
-            borderRadius: "12px",
-            fontSize: "10px",
-            fontWeight: "bold",
-            color: "#fff",
-          }}
-          variant="body2"
-        >
-          HOT
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "12px",
-            fontWeight: 300,
-            color: "#fff",
-            fontFamily:"revert-layer"
-          }}
-          variant="body2"
-        >
-          Azan Prayer
-        </Typography>
-        <Box flexGrow={1} />
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-0 flex items-stretch gap-0">
 
-        <div>
-          {theme.palette.mode === "light" ? (
-            <IconButton
-              onClick={() => {
-                localStorage.setItem(
-                  "mode",
-                  theme.palette.mode === "dark" ? "light" : "dark"
-                );
-                colorMode.toggleColorMode();
-              }}
-              color="inherit"
-            >
-              <LightModeOutlined sx={{ fontSize: "16px " ,color:"orange"}} />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={() => {
-                localStorage.setItem(
-                  "mode",
-                  theme.palette.mode === "dark" ? "light" : "dark"
-                );
-                colorMode.toggleColorMode();
-              }}
-              color="inherit"
-            >
-              <DarkModeOutlined sx={{ fontSize: "16px " }} />
-            </IconButton>
-          )}
+        {/* ── Brand ─────────────────────────────────────── */}
+        <div className="flex items-center gap-2.5 py-2.5 flex-1 min-w-0">
+          {/* Mosque icon in a circle */}
+          <div className="w-9 h-9 rounded-full bg-white/12 border border-white/20 flex items-center justify-center shrink-0 shadow-inner">
+            <span className="text-[1.25rem] leading-none" aria-hidden>🕌</span>
+          </div>
+
+          {/* Name + subtitle */}
+          <div className="min-w-0">
+            <h1 className="font-lemonada font-bold text-white leading-tight text-[0.95rem] sm:text-[1.05rem] tracking-wide truncate">
+              {t.appName}
+            </h1>
+            <p className="font-lemonada text-[10px] text-white/60 leading-none tracking-widest uppercase mt-0.5 hidden sm:block">
+              {t.appSubtitle}
+            </p>
+          </div>
+
+          {/* Live badge */}
+          <span
+            className="hidden xs:inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white bg-white/15 border border-white/25 rounded-full px-2.5 py-1 shrink-0"
+            style={{ animation: "footerPulse 2.4s ease-in-out infinite" }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-300 animate-pulse" />
+            LIVE
+          </span>
         </div>
 
-        <List component="nav" aria-label="Device settings" sx={{p:0,m:0}}>
-          <ListItem
-            id="lock-button"
-            aria-haspopup="listbox"
-            aria-controls="lock-menu"
-            aria-label="when device is locked"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClickListItem}
-            sx={{ "&:hover": { cursor: "pointer" },px:1 }}
-          >
-            <ListItemText
-              sx={{ ".MuiTypography-root": { fontSize: "10px",color:"#fff" } }}
-              secondary={options[selectedIndex]}
-            />
-            <ExpandMore sx={{color:"#fff"}} />
-          </ListItem>
-        </List>
-        <Menu
-          id="lock-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "lock-button",
-            role: "listbox",
-          }}
-        >
-          {options.map((option, index) => (
-            <MenuItem
-              sx={{ fontSize: "11px", p: "3px 10px", minHeight: "10px" }}
-              key={option}
-             
-              selected={index === selectedIndex}
-              onClick={(event) => handleMenuItemClick(event, index)}
-            >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
+        {/* ── Divider ─────────────────────────────────── */}
+        <div className="w-px bg-white/12 my-2 mx-1 shrink-0" />
 
-        <FacebookIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-        <TwitterIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-        <InstagramIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-      </Stack>
-     </Container>
-    </Box>
+        {/* ── Controls ─────────────────────────────────── */}
+        <div className="flex items-center gap-0.5 py-1.5">
+
+          {/* Language toggle */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => switchLang(lang === "ar" ? "en" : "ar")}
+                className="relative flex flex-col items-center justify-center w-10 h-10 rounded-xl text-white/80 hover:text-white hover:bg-white/12 transition-all duration-200 group"
+                aria-label={lang === "ar" ? "Switch to English" : "التبديل للعربية"}
+              >
+                <Languages className="h-4 w-4" />
+                <span className="text-[8px] font-bold mt-0.5 font-lemonada opacity-75 group-hover:opacity-100">
+                  {lang === "ar" ? "EN" : "ع"}
+                </span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {lang === "ar" ? "English" : "العربية"}
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Dark mode toggle */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={toggleColorMode}
+                className="flex flex-col items-center justify-center w-10 h-10 rounded-xl text-white/80 hover:text-white hover:bg-white/12 transition-all duration-200 group"
+                aria-label={isDark ? "Light mode" : "Dark mode"}
+              >
+                {isDark
+                  ? <Sun  className="h-4 w-4 text-yellow-300 group-hover:text-yellow-200" />
+                  : <Moon className="h-4 w-4" />}
+                <span className="text-[8px] font-bold mt-0.5 font-lemonada opacity-75 group-hover:opacity-100">
+                  {isDark ? "☀" : "🌙"}
+                </span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {isDark ? "Light mode" : "Dark mode"}
+            </TooltipContent>
+          </Tooltip>
+
+        </div>
+      </div>
+    </header>
   );
-};
-
-export default Top_Head;
+}

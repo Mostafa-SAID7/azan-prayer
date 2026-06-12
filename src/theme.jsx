@@ -1,61 +1,37 @@
+import { createContext, useContext, useState, useEffect } from "react";
 
-import { createContext, useState, useMemo } from "react";
-import { createTheme } from "@mui/material/styles";
-import { grey } from "@mui/material/colors";
-
-export const getDesignTokens = (mode) => ({
-
-  palette: {
-    mode,
-    ...(mode === "light"
-      ? {
-   
-          // palette values for light mode
-          text: {
-            primary: "#2B3445",
-          },
-          neutral: {
-            main: "#64748B",
-          },
-
-          favColor: {
-            main: grey[400],
-          },
-        }
-      : {
-          // palette values for dark mode
-          neutral: {
-            main: "#64748B",
-          },
-
-          favColor: {
-            main: grey[800],
-          },
-          text: {
-            primary: "#fff",
-          },
-        }),
-  },
-});
-
-// context for color mode
 export const ColorModeContext = createContext({
+  mode: "light",
   toggleColorMode: () => {},
 });
 
-export const useMode = () => {
+export const useColorMode = () => useContext(ColorModeContext);
+
+export function ThemeProvider({ children }) {
   const [mode, setMode] = useState(
-    localStorage.getItem("mode") ? localStorage.getItem("mode") : "light"
+    () => localStorage.getItem("mode") || "light"
   );
 
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () =>
-        setMode((prev) => (prev === "light" ? "dark" : "light")),
-    }),
-    []
-  );
+  useEffect(() => {
+    const root = document.documentElement;
+    if (mode === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [mode]);
 
-  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
-  return [theme, colorMode];
-};
+  const toggleColorMode = () => {
+    setMode((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("mode", next);
+      return next;
+    });
+  };
+
+  return (
+    <ColorModeContext.Provider value={{ mode, toggleColorMode }}>
+      {children}
+    </ColorModeContext.Provider>
+  );
+}

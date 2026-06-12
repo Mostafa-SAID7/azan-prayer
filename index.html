@@ -1,12 +1,89 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/public/azan-modified.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>prayer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary Meta -->
+    <title>أوقات الصلاة | Prayer Times - مواقيت الأذان</title>
+    <meta name="description" content="احصل على أوقات الصلاة الدقيقة في مدن العالم — الفجر، الظهر، العصر، المغرب، العشاء مع التقويم الهجري وعداد تنازلي. Get accurate Islamic prayer times worldwide." />
+    <meta name="keywords" content="أوقات الصلاة, مواقيت الأذان, الفجر, الظهر, العصر, المغرب, العشاء, الشروق, prayer times, salat, azan, adhan, fajr, dhuhr, asr, maghrib, isha, islamic prayer schedule, qibla, hijri calendar, التقويم الهجري" />
+    <meta name="author" content="M.Said" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Arabic, English" />
+    <meta name="rating" content="general" />
+    <meta name="revisit-after" content="1 day" />
+    <meta name="category" content="Religion, Lifestyle" />
+    <link rel="canonical" href="/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:site_name"   content="أوقات الصلاة" />
+    <meta property="og:title"       content="أوقات الصلاة | Islamic Prayer Times" />
+    <meta property="og:description" content="Real-time Islamic prayer times for 40+ cities worldwide with Hijri date, countdown timer, and multiple calculation methods." />
+    <meta property="og:image"       content="/adzan-prayer-mic-call-muslim-islam-mosque-512.webp" />
+    <meta property="og:image:width"  content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:locale"      content="ar_SA" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="أوقات الصلاة | Prayer Times" />
+    <meta name="twitter:description" content="Real-time Islamic prayer times — Fajr, Dhuhr, Asr, Maghrib, Isha for 40+ cities worldwide." />
+    <meta name="twitter:image"       content="/adzan-prayer-mic-call-muslim-islam-mosque-512.webp" />
+
+    <!-- PWA / App meta -->
+    <meta name="application-name"    content="أوقات الصلاة" />
+    <meta name="theme-color"         content="#107C10" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color"         content="#0A5C0A" media="(prefers-color-scheme: dark)" />
+    <meta name="mobile-web-app-capable"       content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title"  content="أوقات الصلاة" />
+    <meta name="msapplication-TileColor"     content="#107C10" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="format-detection"            content="telephone=no" />
+
+    <!-- Icons -->
+    <link rel="icon"              type="image/png"  href="/azan-modified.png" />
+    <link rel="apple-touch-icon"                    href="/azan-modified.png" />
+    <link rel="mask-icon"                           href="/1299210.svg" color="#107C10" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.aladhan.com" />
+    <link rel="dns-prefetch" href="https://api.aladhan.com" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "أوقات الصلاة — Prayer Times",
+      "alternateName": "Azan Prayer Times",
+      "description": "Real-time Islamic prayer times for cities worldwide with Hijri calendar, countdown timer, and multiple calculation methods.",
+      "url": "/",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "inLanguage": ["ar", "en"],
+      "keywords": "prayer times, salat, azan, islamic, fajr, dhuhr, asr, maghrib, isha",
+      "author": { "@type": "Person", "name": "M.Said" }
+    }
+    </script>
   </head>
   <body>
+    <noscript>
+      <div style="text-align:center;padding:40px;font-family:sans-serif;direction:rtl">
+        يتطلب هذا التطبيق تفعيل JavaScript. Please enable JavaScript to use this app.
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
