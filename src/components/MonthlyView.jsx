@@ -3,10 +3,14 @@ import axios from "axios";
 import moment from "moment";
 import { cn } from "../lib/utils";
 import { useLang } from "../contexts/LanguageContext";
+import { API_BASE } from "../data/constants";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "./ui/dialog";
 import { ScrollArea } from "./ui/scroll-area";
+
+/** Prayer columns shown in the monthly table */
+const COLS = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
 export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, calcMethod }) {
   const { t, lang } = useLang();
@@ -22,13 +26,10 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
 
     const year  = moment().year();
     const month = moment().month() + 1;
-    let url;
 
-    if (isGeo && geoCoords) {
-      url = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${geoCoords.lat}&longitude=${geoCoords.lng}&method=${calcMethod}`;
-    } else {
-      url = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${encodeURIComponent(city.apiCity)}&country=${city.apiCountry}&method=${calcMethod}`;
-    }
+    const url = isGeo && geoCoords
+      ? `${API_BASE}/calendar/${year}/${month}?latitude=${geoCoords.lat}&longitude=${geoCoords.lng}&method=${calcMethod}`
+      : `${API_BASE}/calendarByCity/${year}/${month}?city=${encodeURIComponent(city.apiCity)}&country=${city.apiCountry}&method=${calcMethod}`;
 
     axios.get(url)
       .then((res) => setData(res.data.data))
@@ -38,19 +39,21 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
 
   const todayDay = moment().date();
 
+  /** Column header labels from translations */
+  const colHeaders = [t.col.day, t.col.fajr, t.col.sunrise, t.col.dhuhr, t.col.asr, t.col.maghrib, t.col.isha];
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] flex flex-col gap-3 p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="font-lemonada">
-            📅 {t.monthlyTitle}
-          </DialogTitle>
+          <DialogTitle className="font-lemonada">📅 {t.monthlyTitle}</DialogTitle>
           <DialogDescription className="font-lemonada">
             {isGeo ? t.geoCity : (lang === "ar" ? city?.displayAr : city?.displayEn)}
             {" · "}{moment().format("MMMM YYYY")}
           </DialogDescription>
         </DialogHeader>
 
+        {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-16 gap-3">
             <span className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
@@ -58,23 +61,25 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
           </div>
         )}
 
+        {/* Error */}
         {error && (
           <p className="text-center text-sm text-destructive font-lemonada py-8">{error}</p>
         )}
 
+        {/* Table */}
         {data && !loading && (
           <ScrollArea className="flex-1 max-h-[60vh]">
             <div className="overflow-x-auto">
               <table className="w-full text-xs sm:text-sm font-lemonada">
                 <thead>
-                  <tr className="bg-primary/8 border-b sticky top-0 bg-background/95 backdrop-blur-sm">
-                    {[t.col.day, t.col.fajr, t.col.sunrise, t.col.dhuhr, t.col.asr, t.col.maghrib, t.col.isha].map((h, i) => (
+                  <tr className="border-b bg-background/95 backdrop-blur-sm sticky top-0">
+                    {colHeaders.map((h, i) => (
                       <th
                         key={h}
                         className={cn(
-                          "px-2.5 py-2.5 font-semibold text-foreground",
+                          "px-2.5 py-2.5 font-semibold",
                           i === 0 ? "text-start" : "text-center",
-                          i === 2 && "hidden sm:table-cell",
+                          i === 2 && "hidden sm:table-cell",   // hide Sunrise on small screens
                         )}
                       >
                         {h}
@@ -84,10 +89,10 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
                 </thead>
                 <tbody>
                   {data.map((dayData, i) => {
-                    const dayNum    = i + 1;
-                    const isToday   = dayNum === todayDay;
+                    const dayNum  = i + 1;
+                    const isToday = dayNum === todayDay;
                     const { timings, date } = dayData;
-                    const hijriDay  = date?.hijri?.day;
+                    const hijriDay = date?.hijri?.day;
                     return (
                       <tr
                         key={dayNum}
@@ -95,12 +100,11 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
                           "border-b transition-colors",
                           isToday
                             ? "bg-primary/12 dark:bg-primary/15"
-                            : dayNum % 2 === 0
-                            ? "bg-muted/25 hover:bg-muted/50"
-                            : "hover:bg-muted/40",
+                            : dayNum % 2 === 0 ? "bg-muted/25 hover:bg-muted/50" : "hover:bg-muted/40",
                         )}
                       >
-                        <td className="px-2.5 py-2 text-start">
+                        {/* Day cell */}
+                        <td className="px-2.5 py-2 text-start whitespace-nowrap">
                           <span className={cn("tabular-nums font-medium", isToday && "text-primary")}>
                             {dayNum}
                           </span>
@@ -113,9 +117,11 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
                             </span>
                           )}
                         </td>
-                        {[timings.Fajr, timings.Sunrise, timings.Dhuhr, timings.Asr, timings.Maghrib, timings.Isha].map((ti, j) => (
+
+                        {/* Prayer time cells */}
+                        {COLS.map((col, j) => (
                           <td
-                            key={j}
+                            key={col}
                             className={cn(
                               "px-2.5 py-2 text-center tabular-nums",
                               j === 1 && "hidden sm:table-cell",
@@ -123,7 +129,7 @@ export default function MonthlyView({ open, onClose, city, isGeo, geoCoords, cal
                             )}
                             style={{ direction: "ltr" }}
                           >
-                            {ti?.slice(0, 5) ?? "--:--"}
+                            {timings[col]?.slice(0, 5) ?? "--:--"}
                           </td>
                         ))}
                       </tr>

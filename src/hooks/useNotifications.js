@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { playAdhanBeep } from "../lib/utils";
+import { STORAGE, NOTIF_CHECK_MS, DISPLAY_PRAYERS } from "../data/constants";
 
 export function useNotifications(timings, prayerNames) {
-  const [enabled, setEnabled]     = useState(() => localStorage.getItem("notifEnabled") === "1");
-  const [permission, setPermission]= useState(() => Notification?.permission || "default");
-  const alertedRef                 = useRef(new Set());
+  const [enabled,    setEnabled]    = useState(() => localStorage.getItem(STORAGE.NOTIF) === "1");
+  const [permission, setPermission] = useState(() => Notification?.permission ?? "default");
+  const alertedRef                  = useRef(new Set());
 
   const requestPermission = useCallback(async () => {
     if (!("Notification" in window)) return;
@@ -12,7 +13,7 @@ export function useNotifications(timings, prayerNames) {
     setPermission(result);
     if (result === "granted") {
       setEnabled(true);
-      localStorage.setItem("notifEnabled", "1");
+      localStorage.setItem(STORAGE.NOTIF, "1");
     }
   }, []);
 
@@ -23,38 +24,37 @@ export function useNotifications(timings, prayerNames) {
     }
     const next = !enabled;
     setEnabled(next);
-    localStorage.setItem("notifEnabled", next ? "1" : "0");
+    localStorage.setItem(STORAGE.NOTIF, next ? "1" : "0");
   }, [enabled, permission, requestPermission]);
 
   useEffect(() => {
     if (!enabled || !timings || permission !== "granted") return;
 
-    const PRAYERS = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
     const todayKey = new Date().toDateString();
 
     const check = () => {
       const now  = new Date();
-      const hhmm = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+      const hhmm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
-      PRAYERS.forEach((key) => {
+      DISPLAY_PRAYERS.forEach((key) => {
         const prayerTime = timings[key];
         if (!prayerTime) return;
         const alertKey = `${todayKey}_${key}`;
         if (prayerTime === hhmm && !alertedRef.current.has(alertKey)) {
           alertedRef.current.add(alertKey);
           playAdhanBeep();
-          new Notification(`🕌 ${prayerNames?.[key] || key}`, {
-            body: `Prayer time: ${prayerTime}`,
-            icon: "/azan-modified.png",
-            badge: "/azan-modified.png",
-            tag: alertKey,
+          new Notification(`🕌 ${prayerNames?.[key] ?? key}`, {
+            body:              `${prayerNames?.[key] ?? key}: ${prayerTime}`,
+            icon:              "/azan-modified.png",
+            badge:             "/azan-modified.png",
+            tag:               alertKey,
             requireInteraction: false,
           });
         }
       });
     };
 
-    const id = setInterval(check, 30000);
+    const id = setInterval(check, NOTIF_CHECK_MS);
     check();
     return () => clearInterval(id);
   }, [enabled, timings, permission, prayerNames]);

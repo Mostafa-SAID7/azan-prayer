@@ -2,30 +2,23 @@ import { cn } from "../lib/utils";
 import { useLang } from "../contexts/LanguageContext";
 import { Badge } from "./ui/badge";
 import { Check } from "lucide-react";
-
-const GRADIENTS = {
-  Fajr:    "linear-gradient(160deg,#0f0c29 0%,#302b63 55%,#24243e 100%)",
-  Sunrise: "linear-gradient(160deg,#373B44 0%,#4286f4 45%,#f7971e 100%)",
-  Dhuhr:   "linear-gradient(160deg,#1565c0 0%,#42a5f5 55%,#b3e5fc 100%)",
-  Asr:     "linear-gradient(160deg,#00695c 0%,#26c6da 55%,#80deea 100%)",
-  Maghrib: "linear-gradient(160deg,#bf360c 0%,#e64a19 35%,#ff8f00 65%,#ffd54f 100%)",
-  Isha:    "linear-gradient(160deg,#1a1a2e 0%,#16213e 55%,#0f3460 100%)",
-};
-const EMOJIS = { Fajr:"🌙", Sunrise:"🌅", Dhuhr:"☀️", Asr:"🌤️", Maghrib:"🌇", Isha:"🌃" };
-const TRACKABLE = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+import { PRAYER_GRADIENT, PRAYER_EMOJI, TRACKABLE_PRAYERS } from "../data/prayers";
 
 export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone, onToggleDone }) {
   const { t } = useLang();
+
+  const gradient = PRAYER_GRADIENT[prayerKey] ?? PRAYER_GRADIENT.Fajr;
+  const emoji    = PRAYER_EMOJI[prayerKey]    ?? "🕌";
 
   return (
     <div
       className={cn(
         "prayer-card flex-1 min-w-[130px] max-w-[200px] rounded-xl relative group",
         "transition-all duration-300 ease-out",
-        isNext  ? "scale-[1.06] hover:scale-[1.08]" : "hover:scale-[1.03] hover:-translate-y-0.5",
+        isNext ? "scale-[1.06] hover:scale-[1.08]" : "hover:scale-[1.03] hover:-translate-y-0.5",
       )}
     >
-      {/* Active / Next label badge */}
+      {/* Active / Next badge */}
       {(isNext || isActive) && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
           <Badge
@@ -48,8 +41,9 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
         {/* Gradient header */}
         <div
           className="h-20 flex items-center justify-center relative overflow-hidden"
-          style={{ background: GRADIENTS[prayerKey] ?? GRADIENTS.Fajr }}
+          style={{ background: gradient }}
         >
+          {/* Star-field texture overlay */}
           <div
             className="absolute inset-0 opacity-[0.07]"
             style={{
@@ -61,15 +55,14 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
               backgroundSize: "60px 60px,40px 40px,50px 50px",
             }}
           />
+          {/* Active / Next tint */}
           {(isNext || isActive) && (
             <div
-              className="absolute inset-0 transition-colors"
+              className="absolute inset-0"
               style={{ background: isNext ? "rgba(255,152,0,0.10)" : "rgba(76,175,80,0.10)" }}
             />
           )}
-          <span className="text-[2.2rem] z-10 leading-none drop-shadow-md select-none">
-            {EMOJIS[prayerKey] ?? "🕌"}
-          </span>
+          <span className="text-[2.2rem] z-10 leading-none drop-shadow-md select-none">{emoji}</span>
         </div>
 
         {/* Card body */}
@@ -80,6 +73,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
             isActive && "bg-green-500/[0.04] dark:bg-green-500/[0.06]",
           )}
         >
+          {/* Prayer name */}
           <p
             className={cn(
               "font-lemonada font-semibold text-sm mb-0.5 truncate leading-tight",
@@ -90,6 +84,8 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
           >
             {name}
           </p>
+
+          {/* Time */}
           <p
             className={cn(
               "font-lemonada text-xl tabular-nums text-center tracking-tight leading-snug block",
@@ -102,8 +98,8 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
             {time ?? "--:--"}
           </p>
 
-          {/* Tracker checkbox — only for countable prayers */}
-          {TRACKABLE.includes(prayerKey) && (
+          {/* Daily tracker checkbox (trackable prayers only) */}
+          {TRACKABLE_PRAYERS.includes(prayerKey) && (
             <button
               onClick={(e) => { e.stopPropagation(); onToggleDone?.(); }}
               className={cn(
