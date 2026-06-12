@@ -1,161 +1,97 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ColorModeContext } from "../theme";
+import { useLang } from "../contexts/LanguageContext";
 import {
   IconButton,
   useTheme,
   Box,
   Typography,
   Stack,
-  List,
-  ListItemText,
-  MenuItem,
-  Menu,
-  ListItem,
   Container,
-  
+  Tooltip,
 } from "@mui/material";
 import {
   DarkModeOutlined,
-  ExpandMore,
   LightModeOutlined,
+  Translate,
 } from "@mui/icons-material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 
-const options = ["AR", "EN"];
-
 const Top_Head = () => {
   const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
+  const { lang, switchLang, t } = useLang();
 
-  const [anchorEl, setAnchorEl] = useState (null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
-  const open = Boolean(anchorEl);
-
-  const handleClickListItem = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleToggleLang = () => {
+    switchLang(lang === "ar" ? "en" : "ar");
   };
 
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setAnchorEl(null);
+  const handleToggleMode = () => {
+    localStorage.setItem("mode", theme.palette.mode === "dark" ? "light" : "dark");
+    colorMode.toggleColorMode();
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
-    <Box
-      sx={{
-       
-        background: " rgba(9,121,16,1)100% ",
-      }}
-    >
-     <Container>
-     <Stack direction={"row"} alignItems={"center"}>
-        <Typography
-          sx={{
-            mr: 2,
-            p: "3px 10px",
-            bgcolor: "#D23f57",
-            borderRadius: "12px",
-            fontSize: "10px",
-            fontWeight: "bold",
-            color: "#fff",
-          }}
-          variant="body2"
-        >
-          HOT
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: "12px",
-            fontWeight: 300,
-            color: "#fff",
-            fontFamily:"revert-layer"
-          }}
-          variant="body2"
-        >
-          Azan Prayer
-        </Typography>
-        <Box flexGrow={1} />
-
-        <div>
-          {theme.palette.mode === "light" ? (
-            <IconButton
-              onClick={() => {
-                localStorage.setItem(
-                  "mode",
-                  theme.palette.mode === "dark" ? "light" : "dark"
-                );
-                colorMode.toggleColorMode();
-              }}
-              color="inherit"
-            >
-              <LightModeOutlined sx={{ fontSize: "16px " ,color:"orange"}} />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={() => {
-                localStorage.setItem(
-                  "mode",
-                  theme.palette.mode === "dark" ? "light" : "dark"
-                );
-                colorMode.toggleColorMode();
-              }}
-              color="inherit"
-            >
-              <DarkModeOutlined sx={{ fontSize: "16px " }} />
-            </IconButton>
-          )}
-        </div>
-
-        <List component="nav" aria-label="Device settings" sx={{p:0,m:0}}>
-          <ListItem
-            id="lock-button"
-            aria-haspopup="listbox"
-            aria-controls="lock-menu"
-            aria-label="when device is locked"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClickListItem}
-            sx={{ "&:hover": { cursor: "pointer" },px:1 }}
+    <Box sx={{ background: "rgba(9,121,16,1)" }}>
+      <Container>
+        <Stack direction="row" alignItems="center" sx={{ py: 0.5 }}>
+          <Typography
+            sx={{
+              mr: 1.5,
+              p: "3px 10px",
+              bgcolor: "#D23f57",
+              borderRadius: "12px",
+              fontSize: "10px",
+              fontWeight: "bold",
+              color: "#fff",
+              flexShrink: 0,
+            }}
+            variant="body2"
           >
-            <ListItemText
-              sx={{ ".MuiTypography-root": { fontSize: "10px",color:"#fff" } }}
-              secondary={options[selectedIndex]}
-            />
-            <ExpandMore sx={{color:"#fff"}} />
-          </ListItem>
-        </List>
-        <Menu
-          id="lock-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "lock-button",
-            role: "listbox",
-          }}
-        >
-          {options.map((option, index) => (
-            <MenuItem
-              sx={{ fontSize: "11px", p: "3px 10px", minHeight: "10px" }}
-              key={option}
-             
-              selected={index === selectedIndex}
-              onClick={(event) => handleMenuItemClick(event, index)}
-            >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
+            LIVE
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#fff",
+              fontFamily: "Lemonada",
+            }}
+            variant="body2"
+          >
+            {t.appName}
+          </Typography>
 
-        <FacebookIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-        <TwitterIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-        <InstagramIcon sx={{ fontSize: "16px", color: "#fff", mr: 1 }} />
-      </Stack>
-     </Container>
+          <Box flexGrow={1} />
+
+          <Tooltip title={lang === "ar" ? "Switch to English" : "التبديل إلى العربية"}>
+            <IconButton onClick={handleToggleLang} color="inherit" size="small">
+              <Stack direction="row" alignItems="center" spacing={0.3}>
+                <Translate sx={{ fontSize: "14px", color: "#fff" }} />
+                <Typography sx={{ fontSize: "10px", color: "#fff", fontWeight: "bold" }}>
+                  {lang === "ar" ? "EN" : "AR"}
+                </Typography>
+              </Stack>
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={theme.palette.mode === "light" ? "Dark mode" : "Light mode"}>
+            <IconButton onClick={handleToggleMode} color="inherit" size="small">
+              {theme.palette.mode === "light" ? (
+                <LightModeOutlined sx={{ fontSize: "16px", color: "orange" }} />
+              ) : (
+                <DarkModeOutlined sx={{ fontSize: "16px", color: "#fff" }} />
+              )}
+            </IconButton>
+          </Tooltip>
+
+          <FacebookIcon sx={{ fontSize: "15px", color: "#fff", ml: 0.5, cursor: "pointer" }} />
+          <TwitterIcon sx={{ fontSize: "15px", color: "#fff", mx: 0.5, cursor: "pointer" }} />
+          <InstagramIcon sx={{ fontSize: "15px", color: "#fff", cursor: "pointer" }} />
+        </Stack>
+      </Container>
     </Box>
   );
 };

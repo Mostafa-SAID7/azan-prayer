@@ -1,37 +1,26 @@
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material";
+import { useLang } from "../contexts/LanguageContext";
 
 const Footer = () => {
+  const { lang } = useLang();
   return (
-    <Box sx={{
-      background: " rgba(9,121,16,1)100% ",
-    }}>
-      
-      <Typography 
-        justifyContent={"center"}
-        display={"flex"}
-        alignItems={"center"}
-        color={"HighlightText"}
-        variant="h6"
-        sx={{fontSize:18}}
+    <Box sx={{ background: "rgba(9,121,16,1)", py: 1.5 }}>
+      <Typography
+        justifyContent="center"
+        display="flex"
+        alignItems="center"
+        color="#fff"
+        variant="body2"
+        sx={{ fontSize: 13, opacity: 0.9 }}
       >
-Designed and developed by 
-<Button sx={{
-    mx:.5,
-    fontSize:"18px",
-    textTransform:"capitalize",
-    color:"#ffe200"
-
-}}
-variant="text"
-color="primary"
->
-M.Said
-</Button>
-
-©2024
+        {lang === "ar" ? "تصميم وتطوير" : "Designed & developed by"}&nbsp;
+        <Box component="span" sx={{ color: "#ffe200", fontWeight: "bold" }}>
+          M.Said
+        </Box>
+        &nbsp;© 2024
       </Typography>
     </Box>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -1,42 +1,49 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Outlet } from "react-router-dom";
 import MainContaint from "./components/MainContaint";
 import Container from "@mui/material/Container";
 import Footer from "./components/Footer";
-import Scroll_btn from './components/Scroll_btn';
-import Top_Head from './components/Top_Head';
-function App() {
+import Scroll_btn from "./components/Scroll_btn";
+import Top_Head from "./components/Top_Head";
+import { LanguageProvider, useLang } from "./contexts/LanguageContext";
+
+function AppInner() {
   const [theme, colorMode] = useMode();
+  const { isRtl } = useLang();
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Top_Head/>
+        <Top_Head />
         <div
           className="App"
           style={{
-            direction: "rtl",
+            direction: isRtl ? "rtl" : "ltr",
             display: "flex",
             justifyContent: "center",
-            alignItems:"center",
-          
-            margin:"auto",
-            width: "90vw",
-            minHeight:"87vh",
+            alignItems: "center",
+            margin: "auto",
+            width: "100%",
+            minHeight: "87vh",
           }}
         >
-          
-          <Container>
+          <Container maxWidth="lg">
             <MainContaint />
           </Container>
-
-          <Outlet />
         </div>
-        
-        <Scroll_btn/><Footer/>
+        <Scroll_btn />
+        <Footer />
       </ThemeProvider>
     </ColorModeContext.Provider>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppInner />
+    </LanguageProvider>
   );
 }
 
