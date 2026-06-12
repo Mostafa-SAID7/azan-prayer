@@ -175,25 +175,9 @@ Click "Deploy". Netlify handles the rest!
 
 ## Docker Deployment
 
-### Dockerfile
+To build and run the application as a Docker container, we use a secure multi-stage build configuration.
 
-```dockerfile
-# Build stage
-FROM node:18-alpine as builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# Runtime stage
-FROM node:18-alpine
-WORKDIR /app
-RUN npm install -g serve
-COPY --from=builder /app/dist ./dist
-EXPOSE 3000
-CMD ["serve", "-s", "dist", "-l", "3000"]
-```
+For the complete definition, refer directly to the root **[Dockerfile](../Dockerfile)**.
 
 ### Build & Run Locally
 
