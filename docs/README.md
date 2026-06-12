@@ -6,56 +6,43 @@ Complete guides and references for the Islamic Prayer Times PWA.
 
 ### Getting Started
 
-- **[Setup Guide](./SETUP.md)** - Development environment setup
 - **[Quick Start](./QUICKSTART.md)** - 5-minute setup guide
+- **[Setup Guide](./SETUP.md)** - Development environment setup and environment variables
 
-### Development
+### Development & Architecture
 
-- **[Architecture](./ARCHITECTURE.md)** - System design and patterns
-- **[API Reference](./API.md)** - External APIs and endpoints
-- **[Components](./COMPONENTS.md)** - Component library reference
+- **[Architecture](./ARCHITECTURE.md)** - System design, state management, and file structure
+- **[API Reference](./API.md)** - External Aladhan and Quran APIs and endpoints
 
 ### Deployment & Operations
 
-- **[Deployment](./DEPLOYMENT.md)** - Deploy to Vercel, GitHub Pages, etc.
-- **[Build & Release](./BUILD.md)** - Build process and release workflow
+- **[Deployment](./DEPLOYMENT.md)** - Deploying to Vercel, Netlify, and Docker/Docker Compose
 
 ### Features
 
-- **[Prayer Times](./FEATURES/PRAYER_TIMES.md)** - Prayer time functionality
-- **[Notifications](./FEATURES/NOTIFICATIONS.md)** - Prayer notifications
-- **[PWA Guide](./FEATURES/PWA.md)** - Progressive Web App features
-- **[Dark Mode](./FEATURES/DARK_MODE.md)** - Theme implementation
-- **[Multi-Language](./FEATURES/I18N.md)** - Internationalization
+- **[PWA Guide](./FEATURES/PWA.md)** - Progressive Web App setup, Service Worker, and offline caching
 
-### Reference
+### Reference & Support
 
 - **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues and solutions
 - **[FAQ](./FAQ.md)** - Frequently asked questions
-- **[Glossary](./GLOSSARY.md)** - Terms and definitions
+- **[Glossary](./GLOSSARY.md)** - Key Islamic and technical terms and definitions
 
 ## Documentation Structure
 
 ```
 docs/
-├── README.md                    # This file
+├── README.md                    # This file (documentation index)
 ├── SETUP.md                     # Development setup
 ├── QUICKSTART.md               # 5-minute guide
 ├── ARCHITECTURE.md             # System design
 ├── API.md                      # API reference
-├── COMPONENTS.md               # Component docs
 ├── DEPLOYMENT.md               # Deployment guide
-├── BUILD.md                    # Build process
 ├── TROUBLESHOOTING.md          # Problem solving
 ├── FAQ.md                      # Common questions
 ├── GLOSSARY.md                 # Terms
-├── FEATURES/
-│   ├── PRAYER_TIMES.md        # Prayer times feature
-│   ├── NOTIFICATIONS.md       # Notifications
-│   ├── PWA.md                 # PWA functionality
-│   ├── DARK_MODE.md           # Theme switching
-│   └── I18N.md                # Internationalization
-└── SCREENSHOTS.md              # UI screenshots
+└── FEATURES/
+    └── PWA.md                 # PWA functionality and caching
 ```
 
 ## Key Concepts
