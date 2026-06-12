@@ -106,11 +106,12 @@
 .prayers-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
   padding: 4px 0;
 }
-@media (min-width: 540px)  { .prayers-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
-@media (min-width: 900px)  { .prayers-grid { grid-template-columns: repeat(6, 1fr); gap: 12px; } }
+@media (min-width: 480px)  { .prayers-grid { grid-template-columns: repeat(2, 1fr); gap: 11px; } }
+@media (min-width: 640px)  { .prayers-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+@media (min-width: 1024px) { .prayers-grid { grid-template-columns: repeat(6, 1fr); gap: 12px; } }
 
 /* ── Prayer card stagger ─────────────────────────────────── */
 .prayer-card               { animation: slideInScale 0.45s cubic-bezier(0.34,1.18,0.64,1) both; }

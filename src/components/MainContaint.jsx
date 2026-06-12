@@ -381,24 +381,24 @@ export default function MainContaint() {
       >
 
         {/* ── Region filter chips ────────────────────────── */}
-        <div>
-          <div className="flex items-center gap-1.5 mb-2">
+        <div className="space-y-2">
+          <div className="flex items-center gap-1.5">
             <Globe2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
             <span className="text-[11px] font-lemonada text-muted-foreground uppercase tracking-wide">
               {lang === "ar" ? "المنطقة" : "Region"}
             </span>
           </div>
 
-          {/* Scrollable chip row */}
+          {/* Scrollable chip row with better mobile support */}
           <div
-            className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1"
-            style={{ scrollbarWidth: "none" }}
+            className="flex gap-1.5 overflow-x-auto pb-2 -mx-4 px-4 snap-x snap-mandatory"
+            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
           >
             {/* "All" chip */}
             <button
               onClick={() => changeRegion("all")}
               className={cn(
-                "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
+                "shrink-0 snap-start inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
                 selectedRegion === "all"
                   ? "bg-primary text-primary-foreground border-primary shadow-sm"
                   : "bg-background border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
@@ -416,17 +416,17 @@ export default function MainContaint() {
                   key={r.key}
                   onClick={() => changeRegion(r.key)}
                   className={cn(
-                    "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
+                    "shrink-0 snap-start inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
                     active
                       ? "bg-primary text-primary-foreground border-primary shadow-sm"
                       : "bg-background border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
                   )}
                 >
-                  <span>{r.emoji}</span>
-                  <span>{lang === "ar" ? r.ar : r.key}</span>
+                  <span className="text-sm">{r.emoji}</span>
+                  <span className="hidden sm:inline">{lang === "ar" ? r.ar : r.key}</span>
                   <span
                     className={cn(
-                      "text-[9px] rounded-full px-1.5 py-0.5 font-bold leading-none",
+                      "text-[9px] rounded-full px-1 py-0.5 font-bold leading-none",
                       active ? "bg-white/20 text-white" : "bg-muted text-muted-foreground",
                     )}
                   >
@@ -438,96 +438,96 @@ export default function MainContaint() {
           </div>
         </div>
 
-        <Separator />
-
         {/* ── Search + city selector + geo ──────────────── */}
-        <div className="flex flex-col sm:flex-row gap-2.5">
-          <div className="relative flex-1">
-            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+        <div className="space-y-2">
+          <div className="relative">
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none z-10" />
             <Input
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) setSelectedRegion("all"); }}
               placeholder={t.searchCity}
-              className="ps-8 h-9 text-sm"
+              className="ps-9 h-10 text-sm"
               dir={lang === "ar" ? "rtl" : "ltr"}
             />
           </div>
 
-          <div className="flex-[2] min-w-0">
-            <Select
-              value={isGeo ? "" : selectCity.apiCity}
-              onValueChange={(val) => {
-                const city = cities.find((c) => c.apiCity === val);
-                if (city) { setSelectCity(city); setIsGeo(false); setGeoCoords(null); }
-              }}
-            >
-              <SelectTrigger className="h-9 text-sm w-full">
-                <SelectValue placeholder={t.cityLabel} />
-              </SelectTrigger>
-              <SelectContent className="max-h-72">
-                {filteredCities.length === 0 ? (
-                  <div className="py-5 text-center text-sm text-muted-foreground font-lemonada">{t.noResults}</div>
-                ) : showGrouped ? (
-                  /* Grouped by region when "all" + no search */
-                  groupedCities.map(({ region, cities: rCities }) => {
-                    const meta = regionInfo(region);
-                    return (
-                      <SelectGroup key={region}>
-                        <SelectLabel className="flex items-center gap-1.5 font-lemonada text-xs">
-                          <span>{meta?.emoji}</span>
-                          <span>{lang === "ar" ? meta?.ar : region}</span>
-                        </SelectLabel>
-                        {rCities.map((city) => (
-                          <SelectItem key={city.apiCity} value={city.apiCity}>
-                            {lang === "ar" ? city.displayAr : city.displayEn}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    );
-                  })
-                ) : (
-                  /* Flat list when a region is active or search is active */
-                  filteredCities.map((city) => (
-                    <SelectItem key={city.apiCity} value={city.apiCity}>
-                      {lang === "ar" ? city.displayAr : city.displayEn}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Select
+                value={isGeo ? "" : selectCity.apiCity}
+                onValueChange={(val) => {
+                  const city = cities.find((c) => c.apiCity === val);
+                  if (city) { setSelectCity(city); setIsGeo(false); setGeoCoords(null); }
+                }}
+              >
+                <SelectTrigger className="h-10 text-sm w-full">
+                  <SelectValue placeholder={t.cityLabel} />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {filteredCities.length === 0 ? (
+                    <div className="py-5 text-center text-sm text-muted-foreground font-lemonada">{t.noResults}</div>
+                  ) : showGrouped ? (
+                    /* Grouped by region when "all" + no search */
+                    groupedCities.map(({ region, cities: rCities }) => {
+                      const meta = regionInfo(region);
+                      return (
+                        <SelectGroup key={region}>
+                          <SelectLabel className="flex items-center gap-1.5 font-lemonada text-xs">
+                            <span>{meta?.emoji}</span>
+                            <span>{lang === "ar" ? meta?.ar : region}</span>
+                          </SelectLabel>
+                          {rCities.map((city) => (
+                            <SelectItem key={city.apiCity} value={city.apiCity}>
+                              {lang === "ar" ? city.displayAr : city.displayEn}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      );
+                    })
+                  ) : (
+                    /* Flat list when a region is active or search is active */
+                    filteredCities.map((city) => (
+                      <SelectItem key={city.apiCity} value={city.apiCity}>
+                        {lang === "ar" ? city.displayAr : city.displayEn}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={detectLocation}
+                  disabled={geoLoading}
+                  className={cn("h-10 w-10 shrink-0", isGeo && "border-primary text-primary bg-primary/8")}
+                >
+                  {geoLoading
+                    ? <span className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    : <MapPin className="h-4 w-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{geoLoading ? t.detecting : t.detectLocation}</TooltipContent>
+            </Tooltip>
           </div>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={detectLocation}
-                disabled={geoLoading}
-                className={cn("h-9 w-9 shrink-0", isGeo && "border-primary text-primary bg-primary/8")}
-              >
-                {geoLoading
-                  ? <span className="h-3.5 w-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  : <MapPin className="h-4 w-4" />}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{geoLoading ? t.detecting : t.detectLocation}</TooltipContent>
-          </Tooltip>
+          {/* Calculation method - inline with responsive */}
+          <Select value={String(calcMethod)} onValueChange={(v) => setCalcMethod(Number(v))}>
+            <SelectTrigger className="h-10 text-sm w-full">
+              <SelectValue placeholder={t.method} />
+            </SelectTrigger>
+            <SelectContent>
+              {calculationMethods.map((m) => (
+                <SelectItem key={m.id} value={String(m.id)}>
+                  {lang === "ar" ? m.nameAr : m.nameEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-
-        {/* ── Calculation method ────────────────────────── */}
-        <Select value={String(calcMethod)} onValueChange={(v) => setCalcMethod(Number(v))}>
-          <SelectTrigger className="h-9 text-sm w-full">
-            <SelectValue placeholder={t.method} />
-          </SelectTrigger>
-          <SelectContent>
-            {calculationMethods.map((m) => (
-              <SelectItem key={m.id} value={String(m.id)}>
-                {lang === "ar" ? m.nameAr : m.nameEn}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       {/* ── Monthly view dialog ───────────────────────────── */}

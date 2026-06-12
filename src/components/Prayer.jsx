@@ -40,7 +40,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
       >
         {/* Gradient header */}
         <div
-          className="h-20 flex items-center justify-center relative overflow-hidden"
+          className="h-16 sm:h-20 flex items-center justify-center relative overflow-hidden"
           style={{ background: gradient }}
         >
           {/* Star-field texture overlay */}
@@ -62,13 +62,13 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
               style={{ background: isNext ? "rgba(255,152,0,0.10)" : "rgba(76,175,80,0.10)" }}
             />
           )}
-          <span className="text-[2.2rem] z-10 leading-none drop-shadow-md select-none">{emoji}</span>
+          <span className="text-xl sm:text-2xl z-10 leading-none drop-shadow-md select-none">{emoji}</span>
         </div>
 
         {/* Card body */}
         <div
           className={cn(
-            "px-3 pt-2.5 pb-2.5 bg-card transition-colors",
+            "px-3 py-2 bg-card transition-colors",
             isNext   && "bg-orange-500/[0.04] dark:bg-orange-500/[0.06]",
             isActive && "bg-green-500/[0.04] dark:bg-green-500/[0.06]",
           )}
@@ -76,7 +76,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
           {/* Prayer name */}
           <p
             className={cn(
-              "font-lemonada font-semibold text-sm mb-0.5 truncate leading-tight",
+              "font-lemonada font-semibold text-xs sm:text-sm mb-0.5 truncate leading-tight",
               isNext   ? "text-orange-500 dark:text-orange-400"
               : isActive ? "text-green-600 dark:text-green-400"
               : "text-foreground",
@@ -88,7 +88,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
           {/* Time */}
           <p
             className={cn(
-              "font-lemonada text-xl tabular-nums text-center tracking-tight leading-snug block",
+              "font-lemonada text-lg sm:text-xl tabular-nums text-center tracking-tight leading-snug block",
               isNext   ? "font-semibold text-orange-500 dark:text-orange-400"
               : isActive ? "font-semibold text-green-600 dark:text-green-400"
               : "font-light text-muted-foreground",
@@ -103,7 +103,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
             <button
               onClick={(e) => { e.stopPropagation(); onToggleDone?.(); }}
               className={cn(
-                "mt-2 w-full flex items-center justify-center gap-1 rounded-md py-1 text-[11px] font-lemonada",
+                "mt-1.5 w-full flex items-center justify-center gap-1 rounded-md py-1 text-[10px] sm:text-[11px] font-lemonada",
                 "transition-all duration-200",
                 isDone
                   ? "bg-green-500/15 text-green-600 dark:text-green-400"

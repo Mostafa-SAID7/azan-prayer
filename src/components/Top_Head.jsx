@@ -14,10 +14,10 @@ export default function Top_Head() {
       className="app-header sticky top-0 z-40 shadow-[0_2px_20px_rgba(0,0,0,0.35)]"
       style={{ animation: "headerIn 0.4s cubic-bezier(0.34,1.1,0.64,1) both" }}
     >
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-0 flex items-stretch gap-0">
+      <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
 
         {/* ── Brand ─────────────────────────────────────── */}
-        <div className="flex items-center gap-2.5 py-2.5 flex-1 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           {/* Mosque icon in a circle */}
           <div className="w-9 h-9 rounded-full bg-white/12 border border-white/20 flex items-center justify-center shrink-0 shadow-inner">
             <span className="text-[1.25rem] leading-none" aria-hidden>🕌</span>
@@ -25,17 +25,17 @@ export default function Top_Head() {
 
           {/* Name + subtitle */}
           <div className="min-w-0">
-            <h1 className="font-lemonada font-bold text-white leading-tight text-[0.95rem] sm:text-[1.05rem] tracking-wide truncate">
+            <h1 className="font-lemonada font-bold text-white leading-tight text-sm sm:text-base tracking-wide truncate">
               {t.appName}
             </h1>
-            <p className="font-lemonada text-[10px] text-white/60 leading-none tracking-widest uppercase mt-0.5 hidden sm:block">
+            <p className="font-lemonada text-[9px] text-white/60 leading-none tracking-widest uppercase mt-0.5 hidden sm:block">
               {t.appSubtitle}
             </p>
           </div>
 
           {/* Live badge */}
           <span
-            className="hidden xs:inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white bg-white/15 border border-white/25 rounded-full px-2.5 py-1 shrink-0"
+            className="hidden sm:inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white bg-white/15 border border-white/25 rounded-full px-2 py-1 shrink-0"
             style={{ animation: "footerPulse 2.4s ease-in-out infinite" }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-red-300 animate-pulse" />
@@ -43,11 +43,8 @@ export default function Top_Head() {
           </span>
         </div>
 
-        {/* ── Divider ─────────────────────────────────── */}
-        <div className="w-px bg-white/12 my-2 mx-1 shrink-0" />
-
         {/* ── Controls ─────────────────────────────────── */}
-        <div className="flex items-center gap-0.5 py-1.5">
+        <div className="flex items-center gap-1 shrink-0">
 
           {/* Language toggle */}
           <Tooltip>
