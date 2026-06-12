@@ -3,14 +3,13 @@
 ###############################################
 
 # Stage 1: Build stage
-FROM node:18-alpine as builder
+FROM node:20-alpine as builder
 
 WORKDIR /app
 
 # Install dependencies with optimizations
 COPY package*.json ./
-RUN npm ci --only=production && \
-    npm ci --only=development
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -20,7 +19,7 @@ RUN npm run build && \
     npm prune --production
 
 # Stage 2: Runtime stage (lightweight)
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -34,13 +33,13 @@ COPY --from=builder /app/package*.json ./
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S appuser -u 1001
 
 # Set ownership
-RUN chown -R nextjs:nodejs /app
+RUN chown -R appuser:nodejs /app
 
 # Switch to non-root user
-USER nextjs
+USER appuser
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
