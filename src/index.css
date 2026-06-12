@@ -134,41 +134,159 @@ body,
   transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }
 
-/* ── Animation utilities ────────────────────────────────── */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION LIBRARY — centralized, reusable keyframes
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Entrance animations ────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Slide animations (with spring overshoot) ───────────── */
+@keyframes slideInDown {
+  0%   { opacity: 0; transform: translateY(-28px) scale(0.98); }
+  65%  { opacity: 1; transform: translateY(4px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slideInUp {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.98); }
+  65%  { opacity: 1; transform: translateY(-4px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slideInScale {
+  0%   { opacity: 0; transform: scale(0.88) translateY(12px); }
+  70%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Scale / pop animations ─────────────────────────────── */
+@keyframes scaleIn {
+  0%   { opacity: 0; transform: scale(0.7); }
+  65%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.5) rotate(-8deg); }
+  60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
+  80%  { transform: scale(0.96) rotate(-1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.3); }
+  50%  { opacity: 1; transform: scale(1.08); }
+  70%  { transform: scale(0.95); }
+  85%  { transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Continuous motion ──────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-12px); }
+}
+@keyframes floatRotate {
+  0%, 100% { transform: translateY(0px) rotate(-2deg); }
+  50%      { transform: translateY(-14px) rotate(2deg); }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,124,16,0); }
+  50%      { box-shadow: 0 0 0 8px rgba(16,124,16,0.18); }
+}
+@keyframes pulseGlowOrange {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,152,0,0.22); }
+}
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(16, 124, 16, 0.4); }
-  70%  { box-shadow: 0 0 0 10px rgba(16, 124, 16, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 124, 16, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(16,124,16,0.40); }
+  70%  { box-shadow: 0 0 0 12px rgba(16,124,16,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,124,16,0); }
 }
-@keyframes countdown-tick {
-  0%   { opacity: 1; }
-  45%  { opacity: 1; }
-  50%  { opacity: 0.6; }
-  55%  { opacity: 1; }
-  100% { opacity: 1; }
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
-.fade-in-up  { animation: fadeInUp 0.4s ease both; }
-.fade-in     { animation: fadeIn   0.3s ease both; }
-.pulse-ring  { animation: pulse-ring 2s infinite; }
-.countdown   { animation: countdown-tick 1s step-end infinite; font-variant-numeric: tabular-nums; }
+/* ── Text / letter animations ───────────────────────────── */
+@keyframes glitch {
+  0%,100% { transform: translate(0); clip-path: none; }
+  10%     { transform: translate(-2px, 1px); }
+  20%     { transform: translate(2px, -1px); }
+  30%     { transform: translate(0); }
+  40%     { transform: translate(1px, 2px); }
+  50%     { transform: translate(-1px, -2px); }
+  60%     { transform: translate(0); }
+}
+@keyframes shimmerText {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
 
-/* ── Staggered card animations ──────────────────────────── */
-.prayer-card { animation: fadeInUp 0.4s ease both; }
-.prayer-card:nth-child(1) { animation-delay: 0.05s; }
-.prayer-card:nth-child(2) { animation-delay: 0.10s; }
-.prayer-card:nth-child(3) { animation-delay: 0.15s; }
-.prayer-card:nth-child(4) { animation-delay: 0.20s; }
-.prayer-card:nth-child(5) { animation-delay: 0.25s; }
-.prayer-card:nth-child(6) { animation-delay: 0.30s; }
+/* ── Countdown tick ─────────────────────────────────────── */
+@keyframes countdownTick {
+  0%   { opacity: 0.55; transform: scale(0.97); }
+  15%  { opacity: 1;    transform: scale(1.015); }
+  100% { opacity: 1;    transform: scale(1); }
+}
+
+/* ── Stagger helpers ────────────────────────────────────── */
+.anim-delay-0  { animation-delay: 0s !important; }
+.anim-delay-1  { animation-delay: 0.06s !important; }
+.anim-delay-2  { animation-delay: 0.12s !important; }
+.anim-delay-3  { animation-delay: 0.18s !important; }
+.anim-delay-4  { animation-delay: 0.24s !important; }
+.anim-delay-5  { animation-delay: 0.30s !important; }
+
+/* ── Utility classes ────────────────────────────────────── */
+.fade-in       { animation: fadeIn       0.3s ease both; }
+.fade-in-up    { animation: fadeInUp     0.4s ease both; }
+.fade-in-down  { animation: fadeInDown   0.4s ease both; }
+.slide-in-down { animation: slideInDown  0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.slide-in-up   { animation: slideInUp    0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.scale-in      { animation: scaleIn      0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+.pop-in        { animation: popIn        0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
+.bounce-in     { animation: bounceIn     0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.float         { animation: float        3.5s ease-in-out infinite; }
+.pulse-ring    { animation: pulse-ring   2.2s infinite; }
+.spin          { animation: spin         1s linear infinite; }
+
+/* ── Staggered prayer card entrance ────────────────────── */
+.prayer-card {
+  animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both;
+}
+.prayer-card:nth-child(1) { animation-delay: 0.06s; }
+.prayer-card:nth-child(2) { animation-delay: 0.12s; }
+.prayer-card:nth-child(3) { animation-delay: 0.18s; }
+.prayer-card:nth-child(4) { animation-delay: 0.24s; }
+.prayer-card:nth-child(5) { animation-delay: 0.30s; }
+.prayer-card:nth-child(6) { animation-delay: 0.36s; }
+
+/* ── Active / next card pulse ───────────────────────────── */
+.prayer-card-next   { animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both,
+                                 pulseGlowOrange 2.5s ease-in-out 1s infinite; }
+.prayer-card-active { animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both,
+                                 pulseGlow 2.5s ease-in-out 1s infinite; }
 
 /* ── Responsive container ───────────────────────────────── */
 .prayers-grid {

@@ -173,22 +173,109 @@ export default function MainContaint() {
   /* ── Loading skeleton ──────────────────────────────── */
   if (loading) {
     return (
-      <Box sx={{ py: 3 }}>
-        <LinearProgress color="primary" sx={{ mb: 3, borderRadius: 2, height: 3 }} />
-        <Stack direction="row" justifyContent="space-between" mb={2}>
-          <Skeleton variant="text" width={160} height={32} />
-          <Skeleton variant="text" width={200} height={32} />
-        </Stack>
-        <Skeleton variant="text" width={200} height={24} sx={{ mb: 2 }} />
-        <Divider sx={{ mb: 3 }} />
+      <Box sx={{ py: 3, animation: "skeletonAppear 0.35s ease both" }}>
+        {/* Top progress bar */}
+        <LinearProgress
+          color="primary"
+          sx={{ mb: 3, borderRadius: 2, height: 3, animation: "skeletonBarIn 0.5s ease both" }}
+        />
+
+        {/* Banner skeleton — mirrors the real Paper banner */}
+        <Paper
+          elevation={0}
+          sx={{
+            mb: 2.5, p: { xs: 2, sm: 3 },
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: 3,
+            animation: "skeletonFadeUp 0.4s ease 0.05s both",
+          }}
+        >
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", sm: "center" }}
+            spacing={2}
+          >
+            {/* Left: city + dates */}
+            <Box sx={{ flex: 1 }}>
+              <Skeleton variant="rounded" width="55%" height={38} sx={{ mb: 1.5, borderRadius: 2 }} />
+              <Stack direction="row" spacing={1.5} flexWrap="wrap">
+                <Skeleton variant="rounded" width={130} height={18} sx={{ borderRadius: 1 }} />
+                <Skeleton variant="rounded" width={8}   height={8}  sx={{ borderRadius: "50%", alignSelf: "center" }} />
+                <Skeleton variant="rounded" width={150} height={18} sx={{ borderRadius: 1 }} />
+              </Stack>
+            </Box>
+
+            {/* Right: countdown box */}
+            <Box sx={{
+              p: 2, borderRadius: 2.5,
+              border: `1px solid ${theme.palette.divider}`,
+              minWidth: { sm: 200 },
+            }}>
+              <Skeleton variant="rounded" width={140} height={14} sx={{ mb: 1.5, borderRadius: 1 }} />
+              <Skeleton variant="rounded" width={180} height={46} sx={{ borderRadius: 2 }} />
+            </Box>
+          </Stack>
+        </Paper>
+
+        <Divider sx={{ mb: 2.5, animation: "skeletonFadeUp 0.4s ease 0.1s both" }} />
+
+        {/* Prayer card skeletons — mirror the real card structure */}
         <Box className="prayers-grid">
-          {DISPLAY_PRAYERS.map((k) => (
-            <Skeleton key={k} variant="rounded" height={160} sx={{ flex: "1 1 145px", minWidth: 130, maxWidth: 200, borderRadius: 2 }} />
+          {DISPLAY_PRAYERS.map((k, i) => (
+            <Box
+              key={k}
+              sx={{
+                flex: "1 1 145px", minWidth: 130, maxWidth: 200,
+                animation: `skeletonFadeUp 0.4s ease ${0.12 + i * 0.055}s both`,
+              }}
+            >
+              <Box sx={{
+                borderRadius: 2,
+                overflow: "hidden",
+                border: `1px solid ${theme.palette.divider}`,
+              }}>
+                {/* Card header gradient area skeleton */}
+                <Skeleton variant="rectangular" height={80} sx={{ borderRadius: 0 }} />
+                {/* Card body */}
+                <Box sx={{ p: 1.5, pt: 1.5 }}>
+                  <Skeleton variant="rounded" width="60%" height={16} sx={{ mb: 1.2, borderRadius: 1 }} />
+                  <Skeleton variant="rounded" width="80%" height={28} sx={{ borderRadius: 1.5 }} />
+                </Box>
+              </Box>
+            </Box>
           ))}
         </Box>
-        <Typography textAlign="center" color="text.secondary" variant="caption" sx={{ mt: 2, display: "block" }}>
-          {t.loading}
-        </Typography>
+
+        {/* Controls skeleton */}
+        <Paper
+          elevation={0}
+          sx={{
+            mt: 4, p: { xs: 2, sm: 3 },
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: 3,
+            animation: `skeletonFadeUp 0.4s ease ${0.12 + DISPLAY_PRAYERS.length * 0.055 + 0.1}s both`,
+          }}
+        >
+          <Stack spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <Skeleton variant="rounded" height={40} sx={{ flex: 1, borderRadius: 2.5 }} />
+              <Skeleton variant="rounded" height={40} sx={{ flex: 2, borderRadius: 2.5 }} />
+              <Skeleton variant="rounded" width={44} height={40} sx={{ flexShrink: 0, borderRadius: 2.5 }} />
+            </Stack>
+            <Skeleton variant="rounded" height={40} sx={{ borderRadius: 2.5 }} />
+          </Stack>
+        </Paper>
+
+        {/* Inline keyframes for skeleton */}
+        <style>{`
+          @keyframes skeletonAppear   { from { opacity:0; } to { opacity:1; } }
+          @keyframes skeletonBarIn    { from { width:0%; } to { width:100%; } }
+          @keyframes skeletonFadeUp   {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+          }
+        `}</style>
       </Box>
     );
   }
@@ -217,6 +304,7 @@ export default function MainContaint() {
             : `linear-gradient(135deg, ${alpha("#54B054", 0.08)} 0%, ${alpha("#54B054", 0.02)} 100%)`,
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: 3,
+          animation: "slideInDown 0.5s cubic-bezier(0.34,1.2,0.64,1) both",
         }}
       >
         <Stack
@@ -268,7 +356,7 @@ export default function MainContaint() {
               </Typography>
             </Stack>
             <Typography
-              className="countdown"
+              key={remainingTime}
               variant="h3"
               sx={{
                 fontFamily: "Lemonada",
@@ -281,6 +369,12 @@ export default function MainContaint() {
                 lineHeight: 1.1,
                 direction: "ltr",
                 textAlign: { xs: "start", sm: "end" },
+                animation: "countdownTick 1s ease",
+                "@keyframes countdownTick": {
+                  "0%":   { opacity: 0.55, transform: "scale(0.97)" },
+                  "15%":  { opacity: 1,    transform: "scale(1.01)" },
+                  "100%": { opacity: 1,    transform: "scale(1)" },
+                },
               }}
             >
               {remainingTime}
@@ -316,6 +410,7 @@ export default function MainContaint() {
           mt: 4, mb: 4, p: { xs: 2, sm: 3 },
           border: `1px solid ${theme.palette.divider}`,
           borderRadius: 3,
+          animation: "slideInUp 0.5s cubic-bezier(0.34,1.2,0.64,1) 0.25s both",
         }}
       >
         <Stack spacing={2}>
