@@ -1,12 +1,13 @@
 # Netlify Configuration for Payer - Islamic Prayer Times PWA
 
 [build]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "20.11.0"
   NODE_ENV = "production"
+  NPM_VERSION = "10.8.2"
   VITE_ALADHAN_API_URL = "https://api.aladhan.com/v1"
   VITE_DEFAULT_CITY = "Cairo"
   VITE_DEFAULT_COUNTRY = "Egypt"
@@ -79,19 +80,19 @@
 
 # Context-specific settings
 [context.production]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [context.preview]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [context.deploy-preview]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 [context.branch-deploy]
-  command = "npm ci && npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
 
 # Environment variables per context
