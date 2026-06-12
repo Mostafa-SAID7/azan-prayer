@@ -4,54 +4,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── shadcn / Design Tokens ─────────────────────────────── */
+/* ── Design Tokens ──────────────────────────────────────── */
 @layer base {
   :root {
-    --background:          0 0% 100%;
-    --foreground:          240 10% 6%;
-    --card:                0 0% 100%;
-    --card-foreground:     240 10% 6%;
-    --popover:             0 0% 100%;
-    --popover-foreground:  240 10% 6%;
-    --primary:             120 77% 26%;
-    --primary-foreground:  0 0% 98%;
-    --secondary:           120 14% 95%;
-    --secondary-foreground:120 30% 15%;
-    --muted:               240 4.8% 95.9%;
-    --muted-foreground:    240 3.8% 46%;
-    --accent:              120 14% 93%;
-    --accent-foreground:   120 30% 15%;
-    --destructive:         0 84.2% 60.2%;
+    --background:             0 0% 99%;
+    --foreground:             0 10% 8%;
+    --card:                   0 0% 100%;
+    --card-foreground:        0 10% 8%;
+    --popover:                0 0% 100%;
+    --popover-foreground:     0 10% 8%;
+    --primary:                0 74% 38%;
+    --primary-foreground:     0 0% 98%;
+    --secondary:              0 18% 96%;
+    --secondary-foreground:   0 30% 18%;
+    --muted:                  0 8% 95%;
+    --muted-foreground:       0 6% 46%;
+    --accent:                 0 18% 93%;
+    --accent-foreground:      0 30% 18%;
+    --destructive:            0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border:              240 5.9% 90%;
-    --input:               240 5.9% 90%;
-    --ring:                120 77% 26%;
-    --radius:              0.75rem;
+    --border:                 0 10% 89%;
+    --input:                  0 10% 89%;
+    --ring:                   0 74% 38%;
+    --radius:                 0.75rem;
+
+    /* header gradient stops */
+    --header-from:  #6b0f0f;
+    --header-via:   #9b1c1c;
+    --header-to:    #7f1d1d;
   }
 
   .dark {
-    --background:          240 10% 6%;
-    --foreground:          0 0% 97%;
-    --card:                240 8% 10%;
-    --card-foreground:     0 0% 97%;
-    --popover:             240 8% 10%;
-    --popover-foreground:  0 0% 97%;
-    --primary:             120 38% 50%;
-    --primary-foreground:  120 77% 8%;
-    --secondary:           240 4% 16%;
-    --secondary-foreground:0 0% 97%;
-    --muted:               240 4% 16%;
-    --muted-foreground:    240 5% 62%;
-    --accent:              240 4% 16%;
-    --accent-foreground:   0 0% 97%;
-    --destructive:         0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-    --border:              240 4% 18%;
-    --input:               240 4% 18%;
-    --ring:                120 38% 50%;
+    --background:             0 8% 5%;
+    --foreground:             0 5% 95%;
+    --card:                   0 7% 9%;
+    --card-foreground:        0 5% 95%;
+    --popover:                0 7% 9%;
+    --popover-foreground:     0 5% 95%;
+    --primary:                0 70% 58%;
+    --primary-foreground:     0 0% 98%;
+    --secondary:              0 6% 14%;
+    --secondary-foreground:   0 5% 95%;
+    --muted:                  0 6% 13%;
+    --muted-foreground:       0 5% 58%;
+    --accent:                 0 6% 14%;
+    --accent-foreground:      0 5% 95%;
+    --destructive:            0 62% 45%;
+    --destructive-foreground: 0 86% 97%;
+    --border:                 0 6% 17%;
+    --input:                  0 6% 17%;
+    --ring:                   0 70% 58%;
+
+    --header-from:  #3b0808;
+    --header-via:   #5c1111;
+    --header-to:    #3b0808;
   }
 }
 
+/* ── Base reset ─────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border box-border;
@@ -65,7 +75,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1,h2,h3,h4,h5,h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: "Lemonada", sans-serif;
     @apply font-semibold leading-tight;
   }
@@ -73,101 +83,168 @@
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
   ::selection {
-    background-color: hsl(var(--primary) / 0.2);
+    background-color: hsl(var(--primary) / 0.18);
   }
 }
 
-/* ── Custom scrollbar ───────────────────────────────────── */
-::-webkit-scrollbar              { width: 6px; height: 6px; }
-::-webkit-scrollbar-track        { background: transparent; }
-::-webkit-scrollbar-thumb        { background: hsl(var(--primary)/0.35); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover  { background: hsl(var(--primary)/0.55); }
-* { scrollbar-width: thin; scrollbar-color: hsl(var(--primary)/0.35) transparent; }
-
-/* ── Prayers grid layout ────────────────────────────────── */
-.prayers-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  padding: 4px 0;
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar              { width: 5px; height: 5px; }
+::-webkit-scrollbar-track        { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb        {
+  background: hsl(var(--primary) / 0.45);
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--background));
+}
+::-webkit-scrollbar-thumb:hover  { background: hsl(var(--primary) / 0.70); }
+::-webkit-scrollbar-corner       { background: transparent; }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.40) hsl(var(--background));
 }
 
-/* ── Staggered prayer card entrance ────────────────────── */
-.prayer-card                { animation: slideInScale 0.45s cubic-bezier(0.34,1.18,0.64,1) both; }
-.prayer-card:nth-child(1)   { animation-delay: 0.05s; }
-.prayer-card:nth-child(2)   { animation-delay: 0.11s; }
-.prayer-card:nth-child(3)   { animation-delay: 0.17s; }
-.prayer-card:nth-child(4)   { animation-delay: 0.23s; }
-.prayer-card:nth-child(5)   { animation-delay: 0.29s; }
-.prayer-card:nth-child(6)   { animation-delay: 0.35s; }
+/* ── Prayer grid ─────────────────────────────────────────── */
+.prayers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 4px 0;
+}
+@media (min-width: 540px)  { .prayers-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+@media (min-width: 900px)  { .prayers-grid { grid-template-columns: repeat(6, 1fr); gap: 12px; } }
 
-/* ── Smooth dark-mode transitions ───────────────────────── */
+/* ── Prayer card stagger ─────────────────────────────────── */
+.prayer-card               { animation: slideInScale 0.45s cubic-bezier(0.34,1.18,0.64,1) both; }
+.prayer-card:nth-child(1)  { animation-delay: 0.04s; }
+.prayer-card:nth-child(2)  { animation-delay: 0.09s; }
+.prayer-card:nth-child(3)  { animation-delay: 0.14s; }
+.prayer-card:nth-child(4)  { animation-delay: 0.19s; }
+.prayer-card:nth-child(5)  { animation-delay: 0.24s; }
+.prayer-card:nth-child(6)  { animation-delay: 0.29s; }
+
+/* ── Header ──────────────────────────────────────────────── */
+.app-header {
+  background: linear-gradient(135deg, var(--header-from) 0%, var(--header-via) 50%, var(--header-to) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.app-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(255,255,255,0.07) 1px, transparent 1px),
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(circle at 55% 80%, rgba(255,255,255,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 40% 30%, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px, 55px 55px, 35px 35px, 60px 60px;
+  pointer-events: none;
+}
+.app-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), rgba(255,220,220,0.4), rgba(255,255,255,0.25), transparent);
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.app-footer {
+  background: linear-gradient(135deg, var(--header-from) 0%, var(--header-via) 55%, var(--header-to) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.app-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(circle at 70% 30%, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 50px 50px, 40px 40px;
+  pointer-events: none;
+}
+.app-footer::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+/* ── Dark-mode transitions ──────────────────────────────── */
 body, header, footer, main, section, article, aside, nav,
 [class*="bg-"], [class*="border-"], [class*="text-"] {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.22s ease;
 }
 
-/* ── Global keyframes (used by Tailwind animate-* + inline) */
-@keyframes slideInScale {
-  0%   { opacity:0; transform:scale(0.88) translateY(12px); }
-  70%  { opacity:1; transform:scale(1.02) translateY(-2px); }
-  100% { opacity:1; transform:scale(1) translateY(0); }
-}
-@keyframes fadeInUp {
-  from { opacity:0; transform:translateY(18px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes slideInDown {
-  0%   { opacity:0; transform:translateY(-24px) scale(0.98); }
-  65%  { opacity:1; transform:translateY(3px); }
-  100% { opacity:1; transform:translateY(0) scale(1); }
-}
-@keyframes slideInUp {
-  0%   { opacity:0; transform:translateY(24px) scale(0.98); }
-  65%  { opacity:1; transform:translateY(-3px); }
-  100% { opacity:1; transform:translateY(0) scale(1); }
-}
-@keyframes bounceIn {
-  0%   { opacity:0; transform:scale(0.3); }
-  50%  { opacity:1; transform:scale(1.06); }
-  70%  { transform:scale(0.95); }
-  100% { opacity:1; transform:scale(1); }
-}
-@keyframes float {
-  0%,100% { transform:translateY(0); }
-  50%     { transform:translateY(-10px); }
-}
-@keyframes ripple {
-  0%   { transform:scale(0); opacity:0.5; }
-  100% { transform:scale(2.6); opacity:0; }
-}
-@keyframes countdownTick {
-  0%   { opacity:0.55; transform:scale(0.97); }
-  20%  { opacity:1;    transform:scale(1.015); }
-  100% { opacity:1;    transform:scale(1); }
-}
-@keyframes shimmer {
-  0%   { background-position:-400px 0; }
-  100% { background-position: 400px 0; }
-}
-@keyframes pulseGlow {
-  0%,100% { box-shadow:0 0 0 0 hsl(120 77% 26% / 0); }
-  50%     { box-shadow:0 0 0 8px hsl(120 77% 26% / 0.15); }
-}
-@keyframes skeletonFadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ── Utility animation classes ──────────────────────────── */
-.animate-fade-in-up    { animation: fadeInUp     0.4s ease both; }
-.animate-slide-down    { animation: slideInDown  0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
-.animate-slide-up      { animation: slideInUp    0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
-.animate-bounce-in     { animation: bounceIn     0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
-.animate-float         { animation: float        3.5s ease-in-out infinite; }
+/* ── Utility animation classes ───────────────────────────── */
+.animate-fade-in-up  { animation: fadeInUp    0.4s ease both; }
+.animate-slide-down  { animation: slideInDown 0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.animate-slide-up    { animation: slideInUp   0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.animate-bounce-in   { animation: bounceIn    0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.animate-float       { animation: float       3.5s ease-in-out infinite; }
 .animate-shimmer {
   background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
   background-size: 800px 100%;
   animation: shimmer 1.6s linear infinite;
+}
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes slideInScale {
+  0%   { opacity: 0; transform: scale(0.88) translateY(14px); }
+  70%  { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInDown {
+  0%   { opacity: 0; transform: translateY(-24px) scale(0.98); }
+  65%  { opacity: 1; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slideInUp {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.98); }
+  65%  { opacity: 1; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.3); }
+  50%  { opacity: 1; transform: scale(1.06); }
+  70%  {             transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes ripple {
+  0%   { transform: scale(0);   opacity: 0.5; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes countdownTick {
+  0%   { opacity: 0.5;  transform: scale(0.97); }
+  20%  { opacity: 1;    transform: scale(1.015); }
+  100% { opacity: 1;    transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0   hsl(var(--primary) / 0); }
+  50%       { box-shadow: 0 0 0 9px hsl(var(--primary) / 0.18); }
+}
+@keyframes skeletonFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes headerIn {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes footerPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
 }

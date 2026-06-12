@@ -13,7 +13,7 @@ export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone
   return (
     <div
       className={cn(
-        "prayer-card flex-1 min-w-[130px] max-w-[200px] rounded-xl relative group",
+        "prayer-card w-full rounded-xl relative group",
         "transition-all duration-300 ease-out",
         isNext ? "scale-[1.06] hover:scale-[1.08]" : "hover:scale-[1.03] hover:-translate-y-0.5",
       )}
