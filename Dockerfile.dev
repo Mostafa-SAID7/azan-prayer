@@ -1,0 +1,20 @@
+###############################################
+# Development Docker image with hot reload
+###############################################
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Expose dev port
+EXPOSE 5000
+
+# Start dev server with HMR
+CMD ["npm", "run", "dev"]

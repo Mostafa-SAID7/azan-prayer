@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build
+dist
+build
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+.DS_Store
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# Documentation
+docs
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Tests
+coverage
+.nyc_output
+
+# Cache
+.cache
+.eslintcache
+.vite

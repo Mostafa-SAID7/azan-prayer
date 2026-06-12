@@ -1,0 +1,138 @@
+name: CD - Deploy to Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  build-and-deploy:
+    name: 🚀 Build & Deploy to Netlify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://azan-prayer.netlify.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          VITE_ALADHAN_API_URL: ${{ secrets.VITE_ALADHAN_API_URL }}
+          VITE_DEFAULT_CITY: ${{ secrets.VITE_DEFAULT_CITY }}
+          VITE_DEFAULT_COUNTRY: ${{ secrets.VITE_DEFAULT_COUNTRY }}
+
+      - name: Deploy to Netlify
+        uses: nwtour/github-action-netlify-deploy@v2.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          build-dir: './dist'
+          functions-dir: './netlify/functions'
+          production-branch: main
+          production-deploy: true
+
+      - name: Comment on commit
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: '✅ **Deployed to Netlify**\n\n🔗 [Live Preview](https://azan-prayer.netlify.app)'
+            })
+
+  verify-deployment:
+    name: ✅ Verify Deployment
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    timeout-minutes: 10
+
+    steps:
+      - name: Wait for deployment
+        run: sleep 10
+
+      - name: Check site availability
+        run: |
+          for i in {1..30}; do
+            if curl -f https://azan-prayer.netlify.app > /dev/null 2>&1; then
+              echo "✅ Site is live"
+              exit 0
+            fi
+            echo "Attempt $i/30: Waiting for site to be live..."
+            sleep 5
+          done
+          echo "❌ Site failed to come online"
+          exit 1
+
+      - name: Verify critical pages
+        run: |
+          echo "Checking home page..."
+          curl -f https://azan-prayer.netlify.app || exit 1
+          echo "✅ Home page accessible"
+
+      - name: Check Service Worker
+        run: |
+          echo "Checking service worker..."
+          curl -f https://azan-prayer.netlify.app/service-worker.js || echo "Service worker not yet available"
+          echo "✅ Service worker check complete"
+
+      - name: Verify assets
+        run: |
+          echo "Checking assets..."
+          curl -f https://azan-prayer.netlify.app/azan-modified.png || exit 1
+          echo "✅ Assets accessible"
+
+  notify:
+    name: 📢 Send Notification
+    runs-on: ubuntu-latest
+    needs: [build-and-deploy, verify-deployment]
+    if: always()
+
+    steps:
+      - name: Deployment Status
+        run: |
+          if [ "${{ needs.build-and-deploy.result }}" = "success" ] && [ "${{ needs.verify-deployment.result }}" = "success" ]; then
+            echo "✅ **Deployment Successful!**"
+            echo "🔗 Live: https://azan-prayer.netlify.app"
+          else
+            echo "❌ **Deployment Failed**"
+            exit 1
+          fi
+
+      - name: Send Slack Notification
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          payload: |
+            {
+              "text": "Payer Deployment",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Payer - Prayer Times*\n*Status:* ${{ needs.build-and-deploy.result == 'success' && '✅ Success' || '❌ Failed' }}\n*URL:* https://azan-prayer.netlify.app"
+                  }
+                }
+              ]
+            }
