@@ -67,7 +67,7 @@ export default function Top_Head({ activeTab, onTabChange }) {
                 className={cn(
                   "relative flex items-center justify-center gap-1 px-2 sm:px-4 py-1 text-xs sm:text-sm font-semibold font-lemonada transition-all duration-200 rounded-md",
                   activeTab === id
-                    ? "text-primary bg-primary/10"
+                    ? "text-amber-300 bg-white/10 shadow-sm"
                     : "text-white/60 hover:text-white/90 hover:bg-white/5",
                 )}
               >
@@ -77,7 +77,7 @@ export default function Top_Head({ activeTab, onTabChange }) {
                 {/* Active underline indicator */}
                 <span
                   className={cn(
-                    "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-primary transition-all duration-300",
+                    "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24] transition-all duration-300",
                     activeTab === id ? "w-8 sm:w-10" : "w-0",
                   )}
                 />
