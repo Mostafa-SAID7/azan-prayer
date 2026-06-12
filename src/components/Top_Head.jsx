@@ -28,11 +28,11 @@ export default function Top_Head({ activeTab, onTabChange }) {
       style={{ animation: "headerIn 0.4s cubic-bezier(0.34,1.1,0.64,1) both" }}
     >
       <div className="relative z-10">
-        {/* ── Top Row: Brand + Controls ─────────────────── */}
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
+        {/* ── Single Row: Brand + Navigation + Controls ─── */}
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2 h-16 sm:h-14">
 
           {/* ── Brand ─────────────────────────────────────── */}
-          <div className="flex items-center gap-2 min-w-0 flex-1">
+          <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
             {/* Mosque icon in a circle */}
             <div className="w-9 h-9 rounded-full bg-white/12 border border-white/20 flex items-center justify-center shrink-0 shadow-inner">
               <span className="text-[1.25rem] leading-none" aria-hidden>🕌</span>
@@ -56,6 +56,33 @@ export default function Top_Head({ activeTab, onTabChange }) {
               <span className="w-1.5 h-1.5 rounded-full bg-red-300 animate-pulse" />
               LIVE
             </span>
+          </div>
+
+          {/* ── Navigation Links (Center) ───────────────── */}
+          <div className="flex items-center justify-center gap-1 flex-1 mx-2">
+            {tabs.map(({ id, label, emoji }) => (
+              <button
+                key={id}
+                onClick={() => handleTabChange(id)}
+                className={cn(
+                  "relative flex items-center justify-center gap-1 px-2 sm:px-4 py-1 text-xs sm:text-sm font-semibold font-lemonada transition-all duration-200 rounded-md",
+                  activeTab === id
+                    ? "text-primary bg-primary/10"
+                    : "text-white/60 hover:text-white/90 hover:bg-white/5",
+                )}
+              >
+                <span className="text-base sm:text-lg leading-none">{emoji}</span>
+                <span className="hidden sm:inline">{label}</span>
+
+                {/* Active underline indicator */}
+                <span
+                  className={cn(
+                    "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-primary transition-all duration-300",
+                    activeTab === id ? "w-8 sm:w-10" : "w-0",
+                  )}
+                />
+              </button>
+            ))}
           </div>
 
           {/* ── Controls ─────────────────────────────────── */}
@@ -95,37 +122,6 @@ export default function Top_Head({ activeTab, onTabChange }) {
               </TooltipContent>
             </Tooltip>
 
-          </div>
-        </div>
-
-        {/* ── Bottom Row: Navigation Links ──────────────── */}
-        <div className="border-t border-white/10">
-          <div className="max-w-5xl mx-auto px-3 sm:px-4">
-            <div className="flex items-center justify-center h-11 gap-1">
-              {tabs.map(({ id, label, emoji }) => (
-                <button
-                  key={id}
-                  onClick={() => handleTabChange(id)}
-                  className={cn(
-                    "relative flex items-center justify-center gap-1.5 px-3 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold font-lemonada transition-all duration-200",
-                    activeTab === id
-                      ? "text-primary"
-                      : "text-white/60 hover:text-white/90",
-                  )}
-                >
-                  <span className="text-base sm:text-lg leading-none">{emoji}</span>
-                  <span>{label}</span>
-
-                  {/* Active underline indicator */}
-                  <span
-                    className={cn(
-                      "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-primary transition-all duration-300",
-                      activeTab === id ? "w-10 sm:w-14" : "w-0",
-                    )}
-                  />
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </div>
