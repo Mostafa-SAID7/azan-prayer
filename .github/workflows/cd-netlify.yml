@@ -38,15 +38,12 @@ jobs:
           VITE_DEFAULT_COUNTRY: ${{ secrets.VITE_DEFAULT_COUNTRY }}
 
       - name: Deploy to Netlify
-        uses: nwtour/github-action-netlify-deploy@v2.3.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-          build-dir: './dist'
-          functions-dir: './netlify/functions'
-          production-branch: main
-          production-deploy: true
+        run: |
+          npm install -g netlify-cli
+          netlify deploy --prod --dir=./dist --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Comment on commit
         if: github.event_name == 'push'
