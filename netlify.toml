@@ -1,7 +1,7 @@
 # Netlify Configuration for Payer - Islamic Prayer Times PWA
 
 [build]
-  command = "npm install && npm run build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist"
 
 [build.environment]
@@ -80,19 +80,19 @@
 
 # Context-specific settings
 [context.production]
-  command = "npm install && npm run build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist"
 
 [context.preview]
-  command = "npm install && npm run build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist"
 
 [context.deploy-preview]
-  command = "npm install && npm run build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist"
 
 [context.branch-deploy]
-  command = "npm install && npm run build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist"
 
 # Environment variables per context
