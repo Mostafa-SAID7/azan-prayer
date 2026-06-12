@@ -116,13 +116,12 @@ jobs:
           fi
 
       - name: Send Slack Notification
-        if: always()
+        if: always() && secrets.SLACK_WEBHOOK != ''
         uses: slackapi/slack-github-action@v1
         with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": "Payer Deployment",
+              "text": "Payer - Prayer Times Deployment",
               "blocks": [
                 {
                   "type": "section",
@@ -133,3 +132,5 @@ jobs:
                 }
               ]
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

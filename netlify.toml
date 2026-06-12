@@ -3,9 +3,10 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  environment = { NODE_VERSION = "18.17.0", NODE_ENV = "production" }
 
 [build.environment]
+  NODE_VERSION = "20"
+  NODE_ENV = "production"
   VITE_ALADHAN_API_URL = "https://api.aladhan.com/v1"
   VITE_DEFAULT_CITY = "Cairo"
   VITE_DEFAULT_COUNTRY = "Egypt"
