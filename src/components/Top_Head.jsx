@@ -23,13 +23,13 @@ export default function Top_Head({ activeTab, onTabChange }) {
   };
 
   return (
-    <>
-      {/* ── Main Header ───────────────────────────────────── */}
-      <header
-        className="app-header sticky top-0 z-40 shadow-[0_2px_20px_rgba(0,0,0,0.35)]"
-        style={{ animation: "headerIn 0.4s cubic-bezier(0.34,1.1,0.64,1) both" }}
-      >
-        <div className="relative z-10 max-w-5xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
+    <header
+      className="app-header sticky top-0 z-40 shadow-[0_2px_20px_rgba(0,0,0,0.35)]"
+      style={{ animation: "headerIn 0.4s cubic-bezier(0.34,1.1,0.64,1) both" }}
+    >
+      <div className="relative z-10">
+        {/* ── Top Row: Brand + Controls ─────────────────── */}
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
 
           {/* ── Brand ─────────────────────────────────────── */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -97,38 +97,38 @@ export default function Top_Head({ activeTab, onTabChange }) {
 
           </div>
         </div>
-      </header>
 
-      {/* ── Inner Navigation Header ─────────────────────── */}
-      <nav className="sticky top-[56px] z-30 bg-background/95 backdrop-blur-sm border-b">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="flex items-center justify-center h-12">
-            {tabs.map(({ id, label, emoji }) => (
-              <button
-                key={id}
-                onClick={() => handleTabChange(id)}
-                className={cn(
-                  "relative flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold font-lemonada transition-all duration-200",
-                  activeTab === id
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                <span className="text-lg leading-none">{emoji}</span>
-                <span>{label}</span>
-
-                {/* Active underline indicator */}
-                <span
+        {/* ── Bottom Row: Navigation Links ──────────────── */}
+        <div className="border-t border-white/10">
+          <div className="max-w-5xl mx-auto px-3 sm:px-4">
+            <div className="flex items-center justify-center h-11 gap-1">
+              {tabs.map(({ id, label, emoji }) => (
+                <button
+                  key={id}
+                  onClick={() => handleTabChange(id)}
                   className={cn(
-                    "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-primary transition-all duration-300",
-                    activeTab === id ? "w-12" : "w-0",
+                    "relative flex items-center justify-center gap-1.5 px-3 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold font-lemonada transition-all duration-200",
+                    activeTab === id
+                      ? "text-primary"
+                      : "text-white/60 hover:text-white/90",
                   )}
-                />
-              </button>
-            ))}
+                >
+                  <span className="text-base sm:text-lg leading-none">{emoji}</span>
+                  <span>{label}</span>
+
+                  {/* Active underline indicator */}
+                  <span
+                    className={cn(
+                      "absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 rounded-full bg-primary transition-all duration-300",
+                      activeTab === id ? "w-10 sm:w-14" : "w-0",
+                    )}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </header>
   );
 }
