@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
 
-const TOTAL_MS   = 2800;  // total splash duration
-const EXIT_MS    = 2200;  // when exit animation begins
+const TOTAL_MS = 2800;
+const EXIT_MS  = 2100;
 
 export default function SplashScreen({ onFinish }) {
-  const [phase, setPhase] = useState("enter"); // enter → idle → exit → done
+  const [phase, setPhase] = useState("enter");
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("exit"),  EXIT_MS);
@@ -14,150 +13,80 @@ export default function SplashScreen({ onFinish }) {
   }, [onFinish]);
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 0,
-        background: "linear-gradient(160deg, #043A04 0%, #0A5C0A 40%, #107C10 75%, #1B8A1B 100%)",
+    <div
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        background: "linear-gradient(160deg,#043A04 0%,#0A5C0A 40%,#107C10 75%,#1B8A1B 100%)",
         animation: phase === "exit"
-          ? "splashExit 0.65s cubic-bezier(0.4,0,0.2,1) forwards"
-          : "splashEnter 0.5s ease forwards",
+          ? "splashExit 0.7s cubic-bezier(0.4,0,0.2,1) forwards"
+          : "splashEnter 0.4s ease forwards",
       }}
     >
-      {/* ── Ambient radial glow ─────────────────────── */}
-      <Box sx={{
-        position: "absolute", inset: 0, pointerEvents: "none",
-        background: "radial-gradient(ellipse 60% 55% at 50% 48%, rgba(255,255,255,0.07) 0%, transparent 70%)",
-      }} />
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 55% at 50% 48%, rgba(255,255,255,0.07) 0%, transparent 70%)" }}
+      />
 
-      {/* ── Ripple rings ────────────────────────────── */}
+      {/* Ripple rings */}
       {[0, 1, 2].map((i) => (
-        <Box key={i} sx={{
-          position: "absolute",
-          width: 320, height: 320,
-          borderRadius: "50%",
-          border: "1.5px solid rgba(255,255,255,0.14)",
-          animation: `splashRipple 2.4s cubic-bezier(0,0.2,0.8,1) ${i * 0.8}s infinite`,
-          pointerEvents: "none",
-        }} />
+        <div
+          key={i}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            width: 320, height: 320,
+            border: "1.5px solid rgba(255,255,255,0.14)",
+            animation: `splashRipple 2.4s cubic-bezier(0,0.2,0.8,1) ${i * 0.8}s infinite`,
+          }}
+        />
       ))}
 
-      {/* ── Mosque Icon ─────────────────────────────── */}
-      <Box sx={{
-        fontSize: "5.5rem",
-        lineHeight: 1,
-        mb: 2.5,
-        animation: "splashIconIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
-        filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.35))",
-        zIndex: 1,
-      }}>
+      {/* Mosque icon */}
+      <div
+        className="relative z-10 text-[5.5rem] leading-none mb-4"
+        style={{
+          animation: "splashIconIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s both",
+          filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.35))",
+        }}
+      >
         🕌
-      </Box>
+      </div>
 
-      {/* ── Arabic Title ────────────────────────────── */}
-      <Typography sx={{
-        fontSize: "clamp(1.8rem, 5vw, 2.6rem)",
-        fontFamily: "Lemonada",
-        fontWeight: 700,
-        color: "#fff",
-        letterSpacing: "0.02em",
-        lineHeight: 1.2,
-        textAlign: "center",
-        zIndex: 1,
-        animation: "splashTextIn 0.6s ease 0.35s both",
-        textShadow: "0 2px 16px rgba(0,0,0,0.3)",
-        px: 2,
-      }}>
-        أوقات الصلاة
-      </Typography>
+      {/* Title */}
+      <div
+        className="relative z-10 text-center"
+        style={{ animation: "splashTextIn 0.6s cubic-bezier(0.34,1.2,0.64,1) 0.3s both" }}
+      >
+        <p className="font-lemonada font-bold text-white text-4xl leading-none mb-1.5">
+          أوقات الصلاة
+        </p>
+        <p className="font-lemonada text-white/60 text-sm tracking-[0.3em] uppercase">
+          Prayer Times
+        </p>
+      </div>
 
-      {/* ── English Subtitle ────────────────────────── */}
-      <Typography sx={{
-        fontSize: "clamp(0.85rem, 2vw, 1rem)",
-        fontFamily: "Lemonada",
-        fontWeight: 400,
-        color: "rgba(255,255,255,0.72)",
-        letterSpacing: "0.18em",
-        textTransform: "uppercase",
-        mt: 0.75,
-        mb: 4,
-        zIndex: 1,
-        animation: "splashTextIn 0.6s ease 0.55s both",
-        textAlign: "center",
-        px: 2,
-      }}>
-        Prayer Times
-      </Typography>
-
-      {/* ── Loading dots ────────────────────────────── */}
-      <Box sx={{ display: "flex", gap: 1.2, zIndex: 1 }}>
+      {/* Loading dots */}
+      <div
+        className="flex gap-2 mt-8 relative z-10"
+        style={{ animation: "splashTextIn 0.6s ease 0.55s both" }}
+      >
         {[0, 1, 2].map((i) => (
-          <Box key={i} sx={{
-            width: 8, height: 8,
-            borderRadius: "50%",
-            bgcolor: "rgba(255,255,255,0.8)",
-            animation: `splashDot 1.2s ease ${0.2 + i * 0.18}s infinite`,
-          }} />
+          <div
+            key={i}
+            className="w-2 h-2 rounded-full bg-white/70"
+            style={{ animation: `splashDot 1.4s ease-in-out ${i * 0.22}s infinite` }}
+          />
         ))}
-      </Box>
+      </div>
 
-      {/* ── Progress bar ────────────────────────────── */}
-      <Box sx={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        height: 3,
-        bgcolor: "rgba(255,255,255,0.25)",
-        width: "100%",
-        overflow: "hidden",
-        zIndex: 1,
-      }}>
-        <Box sx={{
-          height: "100%",
-          bgcolor: "rgba(255,255,255,0.75)",
-          borderRadius: "0 2px 2px 0",
-          animation: `splashBar ${EXIT_MS}ms linear 0.1s both`,
-        }} />
-      </Box>
-
-      {/* ── Keyframes ───────────────────────────────── */}
       <style>{`
-        @keyframes splashEnter {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes splashExit {
-          0%   { opacity: 1; transform: scale(1); }
-          100% { opacity: 0; transform: scale(1.06); }
-        }
-        @keyframes splashRipple {
-          0%   { transform: scale(0.1); opacity: 0.8; }
-          100% { transform: scale(2.8); opacity: 0; }
-        }
-        @keyframes splashIconIn {
-          from { opacity: 0; transform: scale(0.3) translateY(30px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes splashTextIn {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes splashDot {
-          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-          40%           { transform: scale(1.2); opacity: 1; }
-        }
-        @keyframes splashBar {
-          from { width: 0%; }
-          to   { width: 100%; }
-        }
+        @keyframes splashEnter   { from{opacity:0} to{opacity:1} }
+        @keyframes splashExit    { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(1.04)} }
+        @keyframes splashRipple  { 0%{transform:scale(0.6);opacity:0.5} 100%{transform:scale(2.4);opacity:0} }
+        @keyframes splashIconIn  { from{opacity:0;transform:scale(0.4) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes splashTextIn  { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes splashDot     { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1.1);opacity:1} }
       `}</style>
-    </Box>
+    </div>
   );
 }

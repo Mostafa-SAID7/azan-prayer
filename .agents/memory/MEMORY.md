@@ -1,0 +1,2 @@
+- [MUI → Tailwind migration](mui-tailwind-migration.md) — full removal of MUI, replaced with Tailwind CSS + shadcn/ui; lucide-react must be pinned to 0.441.0.
+- [Prayer app architecture](prayer-app-arch.md) — key patterns for state, hooks, and 6 new features added during the migration.

@@ -1,172 +1,126 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
-import { useTheme, alpha } from "@mui/material";
+import { cn } from "../lib/utils";
 import { useLang } from "../contexts/LanguageContext";
+import { Badge } from "./ui/badge";
+import { Check } from "lucide-react";
 
 const GRADIENTS = {
-  Fajr:    "linear-gradient(160deg, #0f0c29 0%, #302b63 55%, #24243e 100%)",
-  Sunrise: "linear-gradient(160deg, #373B44 0%, #4286f4 45%, #f7971e 100%)",
-  Dhuhr:   "linear-gradient(160deg, #1565c0 0%, #42a5f5 55%, #b3e5fc 100%)",
-  Asr:     "linear-gradient(160deg, #00695c 0%, #26c6da 55%, #80deea 100%)",
-  Maghrib: "linear-gradient(160deg, #bf360c 0%, #e64a19 35%, #ff8f00 65%, #ffd54f 100%)",
-  Isha:    "linear-gradient(160deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%)",
+  Fajr:    "linear-gradient(160deg,#0f0c29 0%,#302b63 55%,#24243e 100%)",
+  Sunrise: "linear-gradient(160deg,#373B44 0%,#4286f4 45%,#f7971e 100%)",
+  Dhuhr:   "linear-gradient(160deg,#1565c0 0%,#42a5f5 55%,#b3e5fc 100%)",
+  Asr:     "linear-gradient(160deg,#00695c 0%,#26c6da 55%,#80deea 100%)",
+  Maghrib: "linear-gradient(160deg,#bf360c 0%,#e64a19 35%,#ff8f00 65%,#ffd54f 100%)",
+  Isha:    "linear-gradient(160deg,#1a1a2e 0%,#16213e 55%,#0f3460 100%)",
 };
+const EMOJIS = { Fajr:"🌙", Sunrise:"🌅", Dhuhr:"☀️", Asr:"🌤️", Maghrib:"🌇", Isha:"🌃" };
+const TRACKABLE = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
-const EMOJIS = {
-  Fajr: "🌙", Sunrise: "🌅", Dhuhr: "☀️", Asr: "🌤️", Maghrib: "🌇", Isha: "🌃",
-};
-
-const Prayer = ({ prayerKey, name, time, isNext, isActive }) => {
-  const theme = useTheme();
+export default function Prayer({ prayerKey, name, time, isNext, isActive, isDone, onToggleDone }) {
   const { t } = useLang();
-  const isLight = theme.palette.mode === "light";
-
-  const accent = isActive ? "#4caf50" : isNext ? "#ff9800" : null;
-  const glowColor = isActive
-    ? "rgba(76,175,80,0.28)"
-    : isNext
-    ? "rgba(255,152,0,0.28)"
-    : null;
 
   return (
-    <Card
-      className="prayer-card"
-      elevation={isNext ? 6 : 2}
-      sx={{
-        flex: "1 1 145px",
-        minWidth: 130,
-        maxWidth: 200,
-        border: accent
-          ? `1.5px solid ${accent}`
-          : `1px solid ${theme.palette.divider}`,
-        transform: isNext ? "scale(1.06)" : "scale(1)",
-        boxShadow: glowColor
-          ? `0 8px 24px ${glowColor}, 0 2px 8px ${glowColor}`
-          : undefined,
-        position: "relative",
-        overflow: "visible",
-        transition: "all 0.28s cubic-bezier(0.4,0,0.2,1)",
-        "&:hover": {
-          transform: isNext ? "scale(1.08)" : "scale(1.03)",
-          boxShadow: glowColor
-            ? `0 12px 32px ${glowColor}`
-            : `0 8px 20px ${alpha(theme.palette.text.primary, 0.10)}`,
-        },
-      }}
+    <div
+      className={cn(
+        "prayer-card flex-1 min-w-[130px] max-w-[200px] rounded-xl relative group",
+        "transition-all duration-300 ease-out",
+        isNext  ? "scale-[1.06] hover:scale-[1.08]" : "hover:scale-[1.03] hover:-translate-y-0.5",
+      )}
     >
+      {/* Active / Next label badge */}
       {(isNext || isActive) && (
-        <Box
-          sx={{
-            position: "absolute",
-            top: -14,
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 10,
-          }}
-        >
-          <Chip
-            label={isActive ? t.currentLabel : t.nextLabel}
-            size="small"
-            sx={{
-              background: `linear-gradient(135deg, ${isActive ? "#43a047, #66bb6a" : "#fb8c00, #ffa726"})`,
-              color: "#fff",
-              fontFamily: "Lemonada",
-              fontSize: "10px",
-              height: 22,
-              fontWeight: 700,
-              letterSpacing: "0.04em",
-              boxShadow: `0 2px 8px ${glowColor}`,
-              whiteSpace: "nowrap",
-              border: "none",
-            }}
-          />
-        </Box>
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+          <Badge
+            variant={isActive ? "active" : "next"}
+            className="text-[10px] h-5 px-2 whitespace-nowrap shadow-lg"
+          >
+            {isActive ? t.currentLabel : t.nextLabel}
+          </Badge>
+        </div>
       )}
 
-      <CardActionArea sx={{ borderRadius: 14, overflow: "hidden" }}>
-        {/* Gradient Header */}
-        <Box
-          sx={{
-            height: 80,
-            background: GRADIENTS[prayerKey] || GRADIENTS.Fajr,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
-            overflow: "hidden",
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              background: isNext
-                ? "rgba(255,152,0,0.12)"
-                : isActive
-                ? "rgba(76,175,80,0.12)"
-                : "transparent",
-              transition: "background 0.3s",
-            },
-          }}
+      <div
+        className={cn(
+          "rounded-xl overflow-hidden border transition-all duration-300",
+          isNext   && "border-orange-500/50 shadow-[0_8px_24px_rgba(255,152,0,0.22),0_2px_8px_rgba(255,152,0,0.1)]",
+          isActive && "border-green-500/50 shadow-[0_8px_24px_rgba(76,175,80,0.20),0_2px_8px_rgba(76,175,80,0.09)]",
+          !isNext  && !isActive && "border-border shadow-sm",
+        )}
+      >
+        {/* Gradient header */}
+        <div
+          className="h-20 flex items-center justify-center relative overflow-hidden"
+          style={{ background: GRADIENTS[prayerKey] ?? GRADIENTS.Fajr }}
         >
-          {/* Subtle shimmer dots */}
-          <Box sx={{
-            position: "absolute", inset: 0, opacity: 0.08,
-            background: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px), radial-gradient(circle at 60% 80%, white 1px, transparent 1px)",
-            backgroundSize: "60px 60px, 40px 40px, 50px 50px",
-          }} />
-          <Typography sx={{ fontSize: "2.2rem", zIndex: 1, filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.4))", lineHeight: 1 }}>
-            {EMOJIS[prayerKey] || "🕌"}
-          </Typography>
-        </Box>
-
-        {/* Card Body */}
-        <CardContent
-          sx={{
-            pt: 1.5,
-            pb: "12px !important",
-            px: 1.5,
-            background: isLight
-              ? isNext ? "rgba(255,152,0,0.04)" : isActive ? "rgba(76,175,80,0.04)" : "transparent"
-              : isNext ? "rgba(255,152,0,0.06)" : isActive ? "rgba(76,175,80,0.06)" : "transparent",
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{
-              fontFamily: "Lemonada",
-              fontWeight: 600,
-              fontSize: { xs: "0.8rem", sm: "0.875rem" },
-              color: accent || "text.primary",
-              mb: 0.5,
-              lineHeight: 1.3,
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              background: [
+                "radial-gradient(circle at 20% 50%,white 1px,transparent 1px)",
+                "radial-gradient(circle at 80% 20%,white 1px,transparent 1px)",
+                "radial-gradient(circle at 60% 80%,white 1px,transparent 1px)",
+              ].join(","),
+              backgroundSize: "60px 60px,40px 40px,50px 50px",
             }}
+          />
+          {(isNext || isActive) && (
+            <div
+              className="absolute inset-0 transition-colors"
+              style={{ background: isNext ? "rgba(255,152,0,0.10)" : "rgba(76,175,80,0.10)" }}
+            />
+          )}
+          <span className="text-[2.2rem] z-10 leading-none drop-shadow-md select-none">
+            {EMOJIS[prayerKey] ?? "🕌"}
+          </span>
+        </div>
+
+        {/* Card body */}
+        <div
+          className={cn(
+            "px-3 pt-2.5 pb-2.5 bg-card transition-colors",
+            isNext   && "bg-orange-500/[0.04] dark:bg-orange-500/[0.06]",
+            isActive && "bg-green-500/[0.04] dark:bg-green-500/[0.06]",
+          )}
+        >
+          <p
+            className={cn(
+              "font-lemonada font-semibold text-sm mb-0.5 truncate leading-tight",
+              isNext   ? "text-orange-500 dark:text-orange-400"
+              : isActive ? "text-green-600 dark:text-green-400"
+              : "text-foreground",
+            )}
           >
             {name}
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{
-              color: accent ? accent : "text.secondary",
-              fontFamily: "Lemonada",
-              fontWeight: accent ? 600 : 300,
-              fontSize: { xs: "1.2rem", sm: "1.45rem" },
-              lineHeight: 1.2,
-              fontVariantNumeric: "tabular-nums",
-              letterSpacing: "0.01em",
-              direction: "ltr",
-              textAlign: "center",
-              display: "block",
-            }}
+          </p>
+          <p
+            className={cn(
+              "font-lemonada text-xl tabular-nums text-center tracking-tight leading-snug block",
+              isNext   ? "font-semibold text-orange-500 dark:text-orange-400"
+              : isActive ? "font-semibold text-green-600 dark:text-green-400"
+              : "font-light text-muted-foreground",
+            )}
+            style={{ direction: "ltr" }}
           >
-            {time || "--:--"}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-};
+            {time ?? "--:--"}
+          </p>
 
-export default Prayer;
+          {/* Tracker checkbox — only for countable prayers */}
+          {TRACKABLE.includes(prayerKey) && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleDone?.(); }}
+              className={cn(
+                "mt-2 w-full flex items-center justify-center gap-1 rounded-md py-1 text-[11px] font-lemonada",
+                "transition-all duration-200",
+                isDone
+                  ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground opacity-0 group-hover:opacity-100",
+              )}
+              aria-label={t.markDone}
+            >
+              <Check className={cn("h-3 w-3", isDone && "text-green-600 dark:text-green-400")} />
+              {isDone ? "✓" : t.markDone}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

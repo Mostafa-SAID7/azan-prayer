@@ -1,328 +1,173 @@
-@import url('https://fonts.googleapis.com/css2?family=Lemonada:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lemonada:wght@300;400;500;600;700&display=swap");
 
-/* ── CSS Design Tokens ─────────────────────────────────── */
-:root {
-  --color-brand:        #107C10;
-  --color-brand-light:  #54B054;
-  --color-brand-dark:   #0A5C0A;
-  --color-gold:         #C19A00;
-  --color-gold-dark:    #FFD700;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  --radius-xs:  4px;
-  --radius-sm:  6px;
-  --radius-md:  10px;
-  --radius-lg:  14px;
-  --radius-xl:  20px;
-  --radius-full: 9999px;
+/* ── shadcn / Design Tokens ─────────────────────────────── */
+@layer base {
+  :root {
+    --background:          0 0% 100%;
+    --foreground:          240 10% 6%;
+    --card:                0 0% 100%;
+    --card-foreground:     240 10% 6%;
+    --popover:             0 0% 100%;
+    --popover-foreground:  240 10% 6%;
+    --primary:             120 77% 26%;
+    --primary-foreground:  0 0% 98%;
+    --secondary:           120 14% 95%;
+    --secondary-foreground:120 30% 15%;
+    --muted:               240 4.8% 95.9%;
+    --muted-foreground:    240 3.8% 46%;
+    --accent:              120 14% 93%;
+    --accent-foreground:   120 30% 15%;
+    --destructive:         0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border:              240 5.9% 90%;
+    --input:               240 5.9% 90%;
+    --ring:                120 77% 26%;
+    --radius:              0.75rem;
+  }
 
-  --space-1:  4px;
-  --space-2:  8px;
-  --space-3:  12px;
-  --space-4:  16px;
-  --space-5:  20px;
-  --space-6:  24px;
-  --space-8:  32px;
-  --space-10: 40px;
-  --space-12: 48px;
-
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:  0 4px 8px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-lg:  0 10px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
-  --shadow-xl:  0 20px 44px rgba(0,0,0,0.13), 0 8px 16px rgba(0,0,0,0.09);
-
-  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow:   375ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  --z-base:    1;
-  --z-sticky:  100;
-  --z-drawer:  200;
-  --z-modal:   300;
-  --z-toast:   400;
-}
-
-/* ── Base Reset ─────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
+  .dark {
+    --background:          240 10% 6%;
+    --foreground:          0 0% 97%;
+    --card:                240 8% 10%;
+    --card-foreground:     0 0% 97%;
+    --popover:             240 8% 10%;
+    --popover-foreground:  0 0% 97%;
+    --primary:             120 38% 50%;
+    --primary-foreground:  120 77% 8%;
+    --secondary:           240 4% 16%;
+    --secondary-foreground:0 0% 97%;
+    --muted:               240 4% 16%;
+    --muted-foreground:    240 5% 62%;
+    --accent:              240 4% 16%;
+    --accent-foreground:   0 0% 97%;
+    --destructive:         0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border:              240 4% 18%;
+    --input:               240 4% 18%;
+    --ring:                120 38% 50%;
+  }
 }
 
-body {
-  font-family: "Lemonada", "Segoe UI Variable", "Segoe UI", "Roboto", system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  line-height: 1.6;
-  min-height: 100dvh;
-  overflow-x: hidden;
+@layer base {
+  * {
+    @apply border-border box-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Lemonada", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,h2,h3,h4,h5,h6 {
+    font-family: "Lemonada", sans-serif;
+    @apply font-semibold leading-tight;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+  }
 }
 
-/* ── Custom Scrollbar ───────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: var(--radius-full);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: var(--radius-full);
-  transition: background var(--transition-fast);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.34);
-}
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
+/* ── Custom scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: hsl(var(--primary)/0.35); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover  { background: hsl(var(--primary)/0.55); }
+* { scrollbar-width: thin; scrollbar-color: hsl(var(--primary)/0.35) transparent; }
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
-}
-
-/* Dark mode scrollbar */
-[data-mui-color-scheme="dark"] ::-webkit-scrollbar-thumb,
-.dark-mode ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-}
-[data-mui-color-scheme="dark"] ::-webkit-scrollbar-thumb:hover,
-.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.34);
-}
-
-/* ── Typography ─────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Lemonada", sans-serif;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-/* ── Focus Visible ──────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* ── Selection ──────────────────────────────────────────── */
-::selection {
-  background-color: rgba(16, 124, 16, 0.2);
-}
-
-/* ── Smooth color transitions ───────────────────────────── */
-body,
-.MuiPaper-root,
-.MuiCard-root,
-.MuiAppBar-root,
-.MuiDrawer-paper {
-  transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   ANIMATION LIBRARY — centralized, reusable keyframes
-   ═══════════════════════════════════════════════════════════ */
-
-/* ── Entrance animations ────────────────────────────────── */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* ── Slide animations (with spring overshoot) ───────────── */
-@keyframes slideInDown {
-  0%   { opacity: 0; transform: translateY(-28px) scale(0.98); }
-  65%  { opacity: 1; transform: translateY(4px) scale(1.005); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes slideInUp {
-  0%   { opacity: 0; transform: translateY(28px) scale(0.98); }
-  65%  { opacity: 1; transform: translateY(-4px) scale(1.005); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes slideInScale {
-  0%   { opacity: 0; transform: scale(0.88) translateY(12px); }
-  70%  { opacity: 1; transform: scale(1.03) translateY(-2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* ── Scale / pop animations ─────────────────────────────── */
-@keyframes scaleIn {
-  0%   { opacity: 0; transform: scale(0.7); }
-  65%  { opacity: 1; transform: scale(1.04); }
-  100% { opacity: 1; transform: scale(1); }
-}
-@keyframes popIn {
-  0%   { opacity: 0; transform: scale(0.5) rotate(-8deg); }
-  60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
-  80%  { transform: scale(0.96) rotate(-1deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
-}
-@keyframes bounceIn {
-  0%   { opacity: 0; transform: scale(0.3); }
-  50%  { opacity: 1; transform: scale(1.08); }
-  70%  { transform: scale(0.95); }
-  85%  { transform: scale(1.02); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-/* ── Continuous motion ──────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%      { transform: translateY(-12px); }
-}
-@keyframes floatRotate {
-  0%, 100% { transform: translateY(0px) rotate(-2deg); }
-  50%      { transform: translateY(-14px) rotate(2deg); }
-}
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(16,124,16,0); }
-  50%      { box-shadow: 0 0 0 8px rgba(16,124,16,0.18); }
-}
-@keyframes pulseGlowOrange {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
-  50%      { box-shadow: 0 0 0 8px rgba(255,152,0,0.22); }
-}
-@keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(16,124,16,0.40); }
-  70%  { box-shadow: 0 0 0 12px rgba(16,124,16,0); }
-  100% { box-shadow: 0 0 0 0 rgba(16,124,16,0); }
-}
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* ── Text / letter animations ───────────────────────────── */
-@keyframes glitch {
-  0%,100% { transform: translate(0); clip-path: none; }
-  10%     { transform: translate(-2px, 1px); }
-  20%     { transform: translate(2px, -1px); }
-  30%     { transform: translate(0); }
-  40%     { transform: translate(1px, 2px); }
-  50%     { transform: translate(-1px, -2px); }
-  60%     { transform: translate(0); }
-}
-@keyframes shimmerText {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-/* ── Countdown tick ─────────────────────────────────────── */
-@keyframes countdownTick {
-  0%   { opacity: 0.55; transform: scale(0.97); }
-  15%  { opacity: 1;    transform: scale(1.015); }
-  100% { opacity: 1;    transform: scale(1); }
-}
-
-/* ── Stagger helpers ────────────────────────────────────── */
-.anim-delay-0  { animation-delay: 0s !important; }
-.anim-delay-1  { animation-delay: 0.06s !important; }
-.anim-delay-2  { animation-delay: 0.12s !important; }
-.anim-delay-3  { animation-delay: 0.18s !important; }
-.anim-delay-4  { animation-delay: 0.24s !important; }
-.anim-delay-5  { animation-delay: 0.30s !important; }
-
-/* ── Utility classes ────────────────────────────────────── */
-.fade-in       { animation: fadeIn       0.3s ease both; }
-.fade-in-up    { animation: fadeInUp     0.4s ease both; }
-.fade-in-down  { animation: fadeInDown   0.4s ease both; }
-.slide-in-down { animation: slideInDown  0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
-.slide-in-up   { animation: slideInUp    0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
-.scale-in      { animation: scaleIn      0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
-.pop-in        { animation: popIn        0.5s cubic-bezier(0.34,1.56,0.64,1) both; }
-.bounce-in     { animation: bounceIn     0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
-.float         { animation: float        3.5s ease-in-out infinite; }
-.pulse-ring    { animation: pulse-ring   2.2s infinite; }
-.spin          { animation: spin         1s linear infinite; }
-
-/* ── Staggered prayer card entrance ────────────────────── */
-.prayer-card {
-  animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both;
-}
-.prayer-card:nth-child(1) { animation-delay: 0.06s; }
-.prayer-card:nth-child(2) { animation-delay: 0.12s; }
-.prayer-card:nth-child(3) { animation-delay: 0.18s; }
-.prayer-card:nth-child(4) { animation-delay: 0.24s; }
-.prayer-card:nth-child(5) { animation-delay: 0.30s; }
-.prayer-card:nth-child(6) { animation-delay: 0.36s; }
-
-/* ── Active / next card pulse ───────────────────────────── */
-.prayer-card-next   { animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both,
-                                 pulseGlowOrange 2.5s ease-in-out 1s infinite; }
-.prayer-card-active { animation: slideInScale 0.5s cubic-bezier(0.34,1.18,0.64,1) both,
-                                 pulseGlow 2.5s ease-in-out 1s infinite; }
-
-/* ── Responsive container ───────────────────────────────── */
+/* ── Prayers grid layout ────────────────────────────────── */
 .prayers-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
   justify-content: center;
-  padding: 8px 0;
-}
-.prayers-grid > * {
-  flex: 1 1 145px;
-  min-width: 130px;
-  max-width: 200px;
+  padding: 4px 0;
 }
 
-/* ── No-image fallback gradient headers ─────────────────── */
-.prayer-header {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  user-select: none;
+/* ── Staggered prayer card entrance ────────────────────── */
+.prayer-card                { animation: slideInScale 0.45s cubic-bezier(0.34,1.18,0.64,1) both; }
+.prayer-card:nth-child(1)   { animation-delay: 0.05s; }
+.prayer-card:nth-child(2)   { animation-delay: 0.11s; }
+.prayer-card:nth-child(3)   { animation-delay: 0.17s; }
+.prayer-card:nth-child(4)   { animation-delay: 0.23s; }
+.prayer-card:nth-child(5)   { animation-delay: 0.29s; }
+.prayer-card:nth-child(6)   { animation-delay: 0.35s; }
+
+/* ── Smooth dark-mode transitions ───────────────────────── */
+body, header, footer, main, section, article, aside, nav,
+[class*="bg-"], [class*="border-"], [class*="text-"] {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.22s ease;
 }
 
-/* ── Utility classes ────────────────────────────────────── */
-.text-gold { color: var(--color-gold); }
-.text-brand { color: var(--color-brand); }
-.rounded { border-radius: var(--radius-md); }
-.glass {
-  backdrop-filter: blur(12px) saturate(160%);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
+/* ── Global keyframes (used by Tailwind animate-* + inline) */
+@keyframes slideInScale {
+  0%   { opacity:0; transform:scale(0.88) translateY(12px); }
+  70%  { opacity:1; transform:scale(1.02) translateY(-2px); }
+  100% { opacity:1; transform:scale(1) translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes slideInDown {
+  0%   { opacity:0; transform:translateY(-24px) scale(0.98); }
+  65%  { opacity:1; transform:translateY(3px); }
+  100% { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes slideInUp {
+  0%   { opacity:0; transform:translateY(24px) scale(0.98); }
+  65%  { opacity:1; transform:translateY(-3px); }
+  100% { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes bounceIn {
+  0%   { opacity:0; transform:scale(0.3); }
+  50%  { opacity:1; transform:scale(1.06); }
+  70%  { transform:scale(0.95); }
+  100% { opacity:1; transform:scale(1); }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50%     { transform:translateY(-10px); }
+}
+@keyframes ripple {
+  0%   { transform:scale(0); opacity:0.5; }
+  100% { transform:scale(2.6); opacity:0; }
+}
+@keyframes countdownTick {
+  0%   { opacity:0.55; transform:scale(0.97); }
+  20%  { opacity:1;    transform:scale(1.015); }
+  100% { opacity:1;    transform:scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position:-400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes pulseGlow {
+  0%,100% { box-shadow:0 0 0 0 hsl(120 77% 26% / 0); }
+  50%     { box-shadow:0 0 0 8px hsl(120 77% 26% / 0.15); }
+}
+@keyframes skeletonFadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-/* ── Print ──────────────────────────────────────────────── */
-@media print {
-  body { background: white !important; }
-  .no-print { display: none !important; }
+/* ── Utility animation classes ──────────────────────────── */
+.animate-fade-in-up    { animation: fadeInUp     0.4s ease both; }
+.animate-slide-down    { animation: slideInDown  0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.animate-slide-up      { animation: slideInUp    0.5s cubic-bezier(0.34,1.2,0.64,1) both; }
+.animate-bounce-in     { animation: bounceIn     0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+.animate-float         { animation: float        3.5s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
 }

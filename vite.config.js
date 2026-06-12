@@ -22,26 +22,11 @@ export default defineConfig({
         dir: 'rtl',
         categories: ['lifestyle', 'utilities'],
         icons: [
-          {
-            src: '/azan-modified.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable',
-          },
-          {
-            src: '/adzan-prayer-mic-call-muslim-islam-mosque-512.webp',
-            sizes: '512x512',
-            type: 'image/webp',
-            purpose: 'any maskable',
-          },
+          { src: '/azan-modified.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+          { src: '/adzan-prayer-mic-call-muslim-islam-mosque-512.webp', sizes: '512x512', type: 'image/webp', purpose: 'any maskable' },
         ],
         shortcuts: [
-          {
-            name: 'أوقات اليوم',
-            short_name: 'اليوم',
-            url: '/',
-            description: 'View today\'s prayer times',
-          },
+          { name: 'أوقات اليوم', short_name: 'اليوم', url: '/', description: "View today's prayer times" },
         ],
       },
       workbox: {
@@ -53,19 +38,12 @@ export default defineConfig({
           {
             urlPattern: /^https:\/\/api\.aladhan\.com\/.*/i,
             handler: 'NetworkFirst',
-            options: {
-              cacheName: 'aladhan-api',
-              expiration: { maxEntries: 20, maxAgeSeconds: 3600 },
-              networkTimeoutSeconds: 8,
-            },
+            options: { cacheName: 'aladhan-api', expiration: { maxEntries: 30, maxAgeSeconds: 3600 }, networkTimeoutSeconds: 8 },
           },
           {
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
             handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-            },
+            options: { cacheName: 'google-fonts', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 } },
           },
         ],
       },
@@ -81,9 +59,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          mui: ['@mui/material', '@mui/icons-material'],
-          utils: ['axios', 'moment', 'moment-timezone'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          radix:  ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tooltip',
+                   '@radix-ui/react-tabs', '@radix-ui/react-switch', '@radix-ui/react-dropdown-menu',
+                   '@radix-ui/react-popover', '@radix-ui/react-scroll-area', '@radix-ui/react-progress',
+                   '@radix-ui/react-separator', '@radix-ui/react-label', '@radix-ui/react-checkbox'],
+          utils:  ['axios', 'moment', 'moment-timezone', 'clsx', 'tailwind-merge', 'class-variance-authority'],
         },
       },
     },

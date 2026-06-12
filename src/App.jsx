@@ -1,18 +1,16 @@
 import { useState, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ColorModeContext, useMode } from "./theme";
+import { ThemeProvider } from "./theme";
+import { LanguageProvider, useLang } from "./contexts/LanguageContext";
+import { TooltipProvider } from "./components/ui/tooltip";
 import MainContaint from "./components/MainContaint";
-import Container from "@mui/material/Container";
 import Footer from "./components/Footer";
 import Scroll_btn from "./components/Scroll_btn";
 import Top_Head from "./components/Top_Head";
 import SplashScreen from "./components/SplashScreen";
 import NotFound from "./components/NotFound";
-import { LanguageProvider, useLang } from "./contexts/LanguageContext";
 
 function AppInner() {
-  const [theme, colorMode] = useMode();
   const { isRtl } = useLang();
   const [splashDone, setSplashDone] = useState(
     () => sessionStorage.getItem("splashShown") === "1"
@@ -24,78 +22,55 @@ function AppInner() {
   }, []);
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <>
+      {!splashDone && <SplashScreen onFinish={handleSplashFinish} />}
 
-        {/* First-load splash screen */}
-        {!splashDone && <SplashScreen onFinish={handleSplashFinish} />}
-
-        <Routes>
-          {/* Main page */}
-          <Route
-            path="/"
-            element={
-              <div
-                style={{
-                  direction: isRtl ? "rtl" : "ltr",
-                  opacity: splashDone ? 1 : 0,
-                  transition: "opacity 0.5s ease 0.1s",
-                  minHeight: "100dvh",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Top_Head />
-                <div
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  <Container maxWidth="lg">
-                    <MainContaint />
-                  </Container>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div
+              dir={isRtl ? "rtl" : "ltr"}
+              style={{ opacity: splashDone ? 1 : 0, transition: "opacity 0.5s ease 0.1s" }}
+              className="min-h-dvh flex flex-col bg-background"
+            >
+              <Top_Head />
+              <main className="flex-1 flex justify-center w-full">
+                <div className="w-full max-w-5xl px-4 pb-8">
+                  <MainContaint />
                 </div>
-                <Scroll_btn />
-                <Footer />
-              </div>
-            }
-          />
-
-          {/* 404 */}
-          <Route
-            path="*"
-            element={
-              <div
-                style={{
-                  direction: isRtl ? "rtl" : "ltr",
-                  minHeight: "100dvh",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Top_Head />
-                <NotFound />
-                <Footer />
-              </div>
-            }
-          />
-        </Routes>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+              </main>
+              <Scroll_btn />
+              <Footer />
+            </div>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <div
+              dir={isRtl ? "rtl" : "ltr"}
+              className="min-h-dvh flex flex-col bg-background"
+            >
+              <Top_Head />
+              <NotFound />
+              <Footer />
+            </div>
+          }
+        />
+      </Routes>
+    </>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <LanguageProvider>
-      <AppInner />
+      <ThemeProvider>
+        <TooltipProvider delayDuration={300}>
+          <AppInner />
+        </TooltipProvider>
+      </ThemeProvider>
     </LanguageProvider>
   );
 }
-
-export default App;

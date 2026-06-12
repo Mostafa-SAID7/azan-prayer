@@ -1,26 +1,14 @@
-import { Box, Typography } from "@mui/material";
 import { useLang } from "../contexts/LanguageContext";
 
-const Footer = () => {
+export default function Footer() {
   const { lang } = useLang();
   return (
-    <Box sx={{ background: "rgba(9,121,16,1)", py: 1.5 }}>
-      <Typography
-        justifyContent="center"
-        display="flex"
-        alignItems="center"
-        color="#fff"
-        variant="body2"
-        sx={{ fontSize: 13, opacity: 0.9 }}
-      >
-        {lang === "ar" ? "تصميم وتطوير" : "Designed & developed by"}&nbsp;
-        <Box component="span" sx={{ color: "#ffe200", fontWeight: "bold" }}>
-          M.Said
-        </Box>
-        &nbsp;© 2024
-      </Typography>
-    </Box>
+    <footer className="bg-[#097910] dark:bg-[#064d06] py-3">
+      <p className="text-center text-white text-sm font-lemonada opacity-90">
+        {lang === "ar" ? "تصميم وتطوير" : "Designed & developed by"}{" "}
+        <span className="text-yellow-300 font-bold">M.Said</span>
+        {" "}© {new Date().getFullYear()}
+      </p>
+    </footer>
   );
-};
-
-export default Footer;
+}

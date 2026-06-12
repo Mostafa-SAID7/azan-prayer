@@ -1,99 +1,67 @@
 import { useContext } from "react";
 import { ColorModeContext } from "../theme";
 import { useLang } from "../contexts/LanguageContext";
-import {
-  IconButton,
-  useTheme,
-  Box,
-  Typography,
-  Stack,
-  Container,
-  Tooltip,
-} from "@mui/material";
-import {
-  DarkModeOutlined,
-  LightModeOutlined,
-  Translate,
-} from "@mui/icons-material";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
+import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Sun, Moon, Languages } from "lucide-react";
 
-const Top_Head = () => {
-  const colorMode = useContext(ColorModeContext);
-  const theme = useTheme();
+export default function Top_Head() {
+  const { mode, toggleColorMode } = useContext(ColorModeContext);
   const { lang, switchLang, t } = useLang();
-
-  const handleToggleLang = () => {
-    switchLang(lang === "ar" ? "en" : "ar");
-  };
-
-  const handleToggleMode = () => {
-    localStorage.setItem("mode", theme.palette.mode === "dark" ? "light" : "dark");
-    colorMode.toggleColorMode();
-  };
+  const isDark = mode === "dark";
 
   return (
-    <Box sx={{ background: "rgba(9,121,16,1)" }}>
-      <Container>
-        <Stack direction="row" alignItems="center" sx={{ py: 0.5 }}>
-          <Typography
-            sx={{
-              mr: 1.5,
-              p: "3px 10px",
-              bgcolor: "#D23f57",
-              borderRadius: "12px",
-              fontSize: "10px",
-              fontWeight: "bold",
-              color: "#fff",
-              flexShrink: 0,
-            }}
-            variant="body2"
-          >
-            LIVE
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "13px",
-              fontWeight: 600,
-              color: "#fff",
-              fontFamily: "Lemonada",
-            }}
-            variant="body2"
-          >
-            {t.appName}
-          </Typography>
+    <header className="sticky top-0 z-40 bg-[#097910] dark:bg-[#064d06] shadow-md">
+      <div className="max-w-5xl mx-auto px-4 py-2 flex items-center gap-2">
+        {/* Brand */}
+        <span className="text-lg" aria-hidden>🕌</span>
+        <span className="font-lemonada font-semibold text-white text-sm tracking-wide">
+          {t.appName}
+        </span>
+        <span className="text-[10px] font-bold text-white bg-red-500 rounded-full px-2 py-0.5 leading-tight">
+          LIVE
+        </span>
 
-          <Box flexGrow={1} />
+        <div className="flex-1" />
 
-          <Tooltip title={lang === "ar" ? "Switch to English" : "التبديل إلى العربية"}>
-            <IconButton onClick={handleToggleLang} color="inherit" size="small">
-              <Stack direction="row" alignItems="center" spacing={0.3}>
-                <Translate sx={{ fontSize: "14px", color: "#fff" }} />
-                <Typography sx={{ fontSize: "10px", color: "#fff", fontWeight: "bold" }}>
-                  {lang === "ar" ? "EN" : "AR"}
-                </Typography>
-              </Stack>
-            </IconButton>
-          </Tooltip>
+        {/* Language toggle */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => switchLang(lang === "ar" ? "en" : "ar")}
+              className="text-white hover:bg-white/15 hover:text-white"
+              aria-label={lang === "ar" ? "Switch to English" : "التبديل للعربية"}
+            >
+              <Languages className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {lang === "ar" ? "Switch to English" : "العربية"}
+          </TooltipContent>
+        </Tooltip>
 
-          <Tooltip title={theme.palette.mode === "light" ? "Dark mode" : "Light mode"}>
-            <IconButton onClick={handleToggleMode} color="inherit" size="small">
-              {theme.palette.mode === "light" ? (
-                <LightModeOutlined sx={{ fontSize: "16px", color: "orange" }} />
-              ) : (
-                <DarkModeOutlined sx={{ fontSize: "16px", color: "#fff" }} />
-              )}
-            </IconButton>
-          </Tooltip>
-
-          <FacebookIcon sx={{ fontSize: "15px", color: "#fff", ml: 0.5, cursor: "pointer" }} />
-          <TwitterIcon sx={{ fontSize: "15px", color: "#fff", mx: 0.5, cursor: "pointer" }} />
-          <InstagramIcon sx={{ fontSize: "15px", color: "#fff", cursor: "pointer" }} />
-        </Stack>
-      </Container>
-    </Box>
+        {/* Dark mode toggle */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={toggleColorMode}
+              className="text-white hover:bg-white/15 hover:text-white"
+              aria-label={isDark ? "Light mode" : "Dark mode"}
+            >
+              {isDark
+                ? <Sun className="h-4 w-4 text-yellow-300" />
+                : <Moon className="h-4 w-4" />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {isDark ? "Light mode" : "Dark mode"}
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </header>
   );
-};
-
-export default Top_Head;
+}
