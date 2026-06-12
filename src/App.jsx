@@ -10,53 +10,11 @@ import Scroll_btn from "./components/Scroll_btn";
 import Top_Head from "./components/Top_Head";
 import SplashScreen from "./components/SplashScreen";
 import NotFound from "./components/NotFound";
-import { cn } from "./lib/utils";
 import { STORAGE } from "./data/constants";
-import { Clock, BookOpen } from "lucide-react";
-
-/* ── Tab bar component ───────────────────────────────────────────── */
-function TabBar({ activeTab, onChange, t }) {
-  const tabs = [
-    { id: "prayer", icon: Clock,     label: t.tabPrayer, emoji: "🕌" },
-    { id: "quran",  icon: BookOpen,  label: t.tabQuran,  emoji: "📖" },
-  ];
-
-  return (
-    <div className="sticky top-[49px] z-30 bg-background/95 backdrop-blur-md border-b">
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="flex">
-          {tabs.map(({ id, icon: Icon, label, emoji }) => (
-            <button
-              key={id}
-              onClick={() => onChange(id)}
-              className={cn(
-                "relative flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-lemonada transition-all duration-200",
-                activeTab === id
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <span className="text-base leading-none">{emoji}</span>
-              <span className="hidden sm:inline">{label}</span>
-
-              {/* Active underline indicator */}
-              <span
-                className={cn(
-                  "absolute bottom-0 left-1/2 -translate-x-1/2 h-[2.5px] rounded-full bg-primary transition-all duration-300",
-                  activeTab === id ? "w-3/4" : "w-0",
-                )}
-              />
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ── Main app inner ──────────────────────────────────────────────── */
 function AppInner() {
-  const { isRtl, t } = useLang();
+  const { isRtl } = useLang();
 
   const [splashDone, setSplashDone] = useState(
     () => sessionStorage.getItem("splashShown") === "1"
@@ -89,10 +47,7 @@ function AppInner() {
               style={{ opacity: splashDone ? 1 : 0, transition: "opacity 0.5s ease 0.1s" }}
               className="min-h-dvh flex flex-col bg-background"
             >
-              <Top_Head />
-
-              {/* Tab switcher */}
-              <TabBar activeTab={activeTab} onChange={handleTabChange} t={t} />
+              <Top_Head activeTab={activeTab} onTabChange={handleTabChange} />
 
               <main className="flex-1 flex justify-center w-full">
                 <div className="w-full max-w-5xl px-4 pb-10">
@@ -113,7 +68,7 @@ function AppInner() {
               dir={isRtl ? "rtl" : "ltr"}
               className="min-h-dvh flex flex-col bg-background"
             >
-              <Top_Head />
+              <Top_Head activeTab="prayer" />
               <NotFound />
               <Footer />
             </div>
