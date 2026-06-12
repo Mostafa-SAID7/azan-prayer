@@ -83,6 +83,9 @@ export const translations = {
     removeFavorite: "إزالة من المفضلة",
     noFavorites:    "لا توجد مدن مفضّلة",
 
+    // ── Region filter ─────────────────────────────────────────────
+    allRegions: "الكل",
+
     // ── Loading / status ──────────────────────────────────────────
     loading: "جارٍ تحميل الأوقات...",
   },
@@ -163,6 +166,9 @@ export const translations = {
     addFavorite:    "Add to favorites",
     removeFavorite: "Remove from favorites",
     noFavorites:    "No favorite cities yet",
+
+    // ── Region filter ─────────────────────────────────────────────
+    allRegions: "All",
 
     // ── Loading / status ──────────────────────────────────────────
     loading: "Loading prayer times...",

@@ -32,3 +32,16 @@ export const MAX_FAVORITES = 5;
 // ── Default settings ──────────────────────────────────────────────
 export const DEFAULT_CALC_METHOD = 4;   // Umm Al-Qura, Makkah
 export const DEFAULT_LANG        = "ar";
+
+// ── Region metadata ───────────────────────────────────────────────
+/** Ordered list of city regions — keys match the `region` field in cities.js */
+export const REGION_META = [
+  { key: "Arabian Peninsula", emoji: "🕌", ar: "شبه الجزيرة العربية" },
+  { key: "Levant & Iraq",     emoji: "🏛️", ar: "الشام والعراق"        },
+  { key: "North Africa",      emoji: "🌴", ar: "شمال أفريقيا"         },
+  { key: "Africa",            emoji: "🌍", ar: "أفريقيا"              },
+  { key: "Turkey & Central Asia", emoji: "⛰️", ar: "تركيا وآسيا الوسطى" },
+  { key: "South & Southeast Asia", emoji: "🌊", ar: "جنوب وجنوب شرق آسيا" },
+  { key: "Europe",            emoji: "🏙️", ar: "أوروبا"               },
+  { key: "Americas",          emoji: "🗽", ar: "الأمريكتان"           },
+];

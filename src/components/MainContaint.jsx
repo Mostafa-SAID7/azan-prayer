@@ -6,7 +6,7 @@ import { cn, playAdhanBeep } from "../lib/utils";
 import { useLang } from "../contexts/LanguageContext";
 import { cities, calculationMethods } from "../data/cities";
 import { DISPLAY_PRAYERS, COUNTDOWN_PRAYERS } from "../data/prayers";
-import { API_BASE, STORAGE, DEFAULT_CALC_METHOD } from "../data/constants";
+import { API_BASE, STORAGE, DEFAULT_CALC_METHOD, REGION_META } from "../data/constants";
 import { usePrayerTracker } from "../hooks/usePrayerTracker";
 import { useNotifications } from "../hooks/useNotifications";
 import { useFavorites } from "../hooks/useFavorites";
@@ -14,17 +14,23 @@ import Prayer from "./Prayer";
 import MonthlyView from "./MonthlyView";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 import { Separator } from "./ui/separator";
 import { Progress } from "./ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import {
   MapPin, Search, CalendarDays, Share2, Bell, BellOff,
-  Star, Music2, CheckCircle2, AlertCircle,
+  Star, Music2, CheckCircle2, AlertCircle, Globe2,
 } from "lucide-react";
 
 /** Zero-pad a number to 2 digits */
 const pad = (n) => String(Math.abs(Math.floor(n))).padStart(2, "0");
+
+/** All unique regions ordered to match REGION_META */
+const REGION_KEYS = REGION_META.map((r) => r.key);
+
+/** Look up region metadata by key */
+const regionInfo = (key) => REGION_META.find((r) => r.key === key);
 
 export default function MainContaint() {
   const { t, lang } = useLang();
@@ -42,6 +48,7 @@ export default function MainContaint() {
   const [loading,         setLoading]         = useState(true);
   const [error,           setError]           = useState(null);
   const [searchQuery,     setSearchQuery]     = useState("");
+  const [selectedRegion,  setSelectedRegion]  = useState("all");
   const [calcMethod,      setCalcMethod]      = useState(DEFAULT_CALC_METHOD);
   const [monthlyOpen,     setMonthlyOpen]     = useState(false);
   const [shareSuccess,    setShareSuccess]    = useState(false);
@@ -59,10 +66,22 @@ export default function MainContaint() {
   const { enabled: notifEnabled, toggleEnabled: toggleNotif } = useNotifications(timings, t.prayers);
 
   /* ── Filtered city list ─────────────────────────────────────── */
-  const filteredCities = cities.filter(({ displayAr, displayEn, apiCountry }) => {
+  const filteredCities = cities.filter((city) => {
     const q = searchQuery.toLowerCase();
-    return displayAr.includes(q) || displayEn.toLowerCase().includes(q) || apiCountry.toLowerCase().includes(q);
+    const matchesSearch = !q || city.displayAr.includes(q) || city.displayEn.toLowerCase().includes(q) || city.apiCountry.toLowerCase().includes(q);
+    const matchesRegion = selectedRegion === "all" || city.region === selectedRegion;
+    return matchesSearch && matchesRegion;
   });
+
+  /**
+   * Cities grouped by region — used when "all" + no search query.
+   * Returns an array of { region, cities[] } in REGION_META order.
+   */
+  const groupedCities = REGION_KEYS
+    .map((rk) => ({ region: rk, cities: filteredCities.filter((c) => c.region === rk) }))
+    .filter((g) => g.cities.length > 0);
+
+  const showGrouped = selectedRegion === "all" && !searchQuery;
 
   /* ── Fetch prayer times ─────────────────────────────────────── */
   const fetchTimings = useCallback(async () => {
@@ -97,22 +116,18 @@ export default function MainContaint() {
     if (!timings?.Fajr) return;
     const now = moment();
 
-    // Find next prayer
     let nextIdx = COUNTDOWN_PRAYERS.findIndex((k) => now.isBefore(moment(timings[k], "HH:mm")));
     if (nextIdx === -1) nextIdx = 0;
     setNextPrayerIdx(nextIdx);
 
-    // Find active (most recently passed) prayer
     let activeKey = null;
     COUNTDOWN_PRAYERS.forEach((k) => {
       if (now.isAfter(moment(timings[k], "HH:mm"))) activeKey = k;
     });
     setActivePrayerKey(activeKey);
 
-    // Time remaining until next prayer
     let diff = moment(timings[COUNTDOWN_PRAYERS[nextIdx]], "HH:mm").diff(now);
     if (diff < 0) {
-      // Past last prayer — count to Fajr next day
       diff = moment("23:59:59", "HH:mm:ss").diff(now) + 1000
            + moment(timings.Fajr, "HH:mm").diff(moment("00:00:00", "HH:mm:ss"));
     }
@@ -156,6 +171,20 @@ export default function MainContaint() {
         setTimeout(() => setShareSuccess(false), 2000);
       }
     } catch { /* user cancelled */ }
+  };
+
+  /* ── Change region ──────────────────────────────────────────── */
+  const changeRegion = (key) => {
+    setSelectedRegion(key);
+    setSearchQuery("");
+    // If current city is not in the new region, reset to first city of that region
+    if (key !== "all") {
+      const stillValid = selectCity.region === key;
+      if (!stillValid && !isGeo) {
+        const first = cities.find((c) => c.region === key);
+        if (first) { setSelectCity(first); setIsGeo(false); setGeoCoords(null); }
+      }
+    }
   };
 
   /* ── Derived values ─────────────────────────────────────────── */
@@ -247,7 +276,6 @@ export default function MainContaint() {
         className="mt-3 rounded-xl border bg-card p-3 flex items-center gap-3"
         style={{ animation: "fadeInUp 0.45s ease 0.06s both" }}
       >
-        {/* Tracker progress */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs font-lemonada font-medium">{t.trackerTitle}</span>
@@ -256,7 +284,6 @@ export default function MainContaint() {
           <Progress value={donePercent} className="h-1.5" />
         </div>
 
-        {/* Action icons */}
         <div className="flex gap-1.5 shrink-0">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -349,16 +376,77 @@ export default function MainContaint() {
 
       {/* ── Controls Panel ────────────────────────────────── */}
       <div
-        className="mt-6 rounded-2xl border bg-card p-4 sm:p-5 space-y-2.5"
+        className="mt-6 rounded-2xl border bg-card p-4 sm:p-5 space-y-3"
         style={{ animation: "slideInUp 0.5s cubic-bezier(0.34,1.2,0.64,1) 0.18s both" }}
       >
-        {/* Row 1: search + city selector + geo */}
+
+        {/* ── Region filter chips ────────────────────────── */}
+        <div>
+          <div className="flex items-center gap-1.5 mb-2">
+            <Globe2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <span className="text-[11px] font-lemonada text-muted-foreground uppercase tracking-wide">
+              {lang === "ar" ? "المنطقة" : "Region"}
+            </span>
+          </div>
+
+          {/* Scrollable chip row */}
+          <div
+            className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {/* "All" chip */}
+            <button
+              onClick={() => changeRegion("all")}
+              className={cn(
+                "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
+                selectedRegion === "all"
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-background border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
+              )}
+            >
+              🌐 {t.allRegions}
+            </button>
+
+            {/* Region chips */}
+            {REGION_META.map((r) => {
+              const count = cities.filter((c) => c.region === r.key).length;
+              const active = selectedRegion === r.key;
+              return (
+                <button
+                  key={r.key}
+                  onClick={() => changeRegion(r.key)}
+                  className={cn(
+                    "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-lemonada border transition-all duration-200 whitespace-nowrap",
+                    active
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                  )}
+                >
+                  <span>{r.emoji}</span>
+                  <span>{lang === "ar" ? r.ar : r.key}</span>
+                  <span
+                    className={cn(
+                      "text-[9px] rounded-full px-1.5 py-0.5 font-bold leading-none",
+                      active ? "bg-white/20 text-white" : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* ── Search + city selector + geo ──────────────── */}
         <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="relative flex-1">
             <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
             <Input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { setSearchQuery(e.target.value); if (e.target.value) setSelectedRegion("all"); }}
               placeholder={t.searchCity}
               className="ps-8 h-9 text-sm"
               dir={lang === "ar" ? "rtl" : "ltr"}
@@ -379,7 +467,26 @@ export default function MainContaint() {
               <SelectContent className="max-h-72">
                 {filteredCities.length === 0 ? (
                   <div className="py-5 text-center text-sm text-muted-foreground font-lemonada">{t.noResults}</div>
+                ) : showGrouped ? (
+                  /* Grouped by region when "all" + no search */
+                  groupedCities.map(({ region, cities: rCities }) => {
+                    const meta = regionInfo(region);
+                    return (
+                      <SelectGroup key={region}>
+                        <SelectLabel className="flex items-center gap-1.5 font-lemonada text-xs">
+                          <span>{meta?.emoji}</span>
+                          <span>{lang === "ar" ? meta?.ar : region}</span>
+                        </SelectLabel>
+                        {rCities.map((city) => (
+                          <SelectItem key={city.apiCity} value={city.apiCity}>
+                            {lang === "ar" ? city.displayAr : city.displayEn}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    );
+                  })
                 ) : (
+                  /* Flat list when a region is active or search is active */
                   filteredCities.map((city) => (
                     <SelectItem key={city.apiCity} value={city.apiCity}>
                       {lang === "ar" ? city.displayAr : city.displayEn}
@@ -408,7 +515,7 @@ export default function MainContaint() {
           </Tooltip>
         </div>
 
-        {/* Row 2: calculation method */}
+        {/* ── Calculation method ────────────────────────── */}
         <Select value={String(calcMethod)} onValueChange={(v) => setCalcMethod(Number(v))}>
           <SelectTrigger className="h-9 text-sm w-full">
             <SelectValue placeholder={t.method} />
@@ -441,7 +548,6 @@ function LoadingSkeleton({ t }) {
   const sk = "animate-pulse bg-muted rounded-lg";
   return (
     <div className="py-4 space-y-4">
-      {/* Banner */}
       <div className="rounded-2xl border p-4 sm:p-5" style={{ animation: "skeletonFadeUp 0.4s ease 0.05s both" }}>
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="space-y-2.5">
@@ -455,7 +561,6 @@ function LoadingSkeleton({ t }) {
         </div>
       </div>
 
-      {/* Stats bar */}
       <div className="border rounded-xl p-3 flex gap-3" style={{ animation: "skeletonFadeUp 0.4s ease 0.08s both" }}>
         <div className="flex-1 space-y-2">
           <div className="flex justify-between"><div className={`${sk} h-3.5 w-28`} /><div className={`${sk} h-3.5 w-14`} /></div>
@@ -464,10 +569,9 @@ function LoadingSkeleton({ t }) {
         <div className="flex gap-1.5">{[0,1,2].map(i=><div key={i} className={`${sk} h-8 w-8 rounded-lg`}/>)}</div>
       </div>
 
-      {/* Prayer cards */}
       <div className="prayers-grid">
         {DISPLAY_PRAYERS.map((k, i) => (
-          <div key={k} className="flex-1 min-w-[130px] max-w-[200px] rounded-xl overflow-hidden border"
+          <div key={k} className="w-full rounded-xl overflow-hidden border"
             style={{ animation: `skeletonFadeUp 0.4s ease ${0.1 + i * 0.055}s both` }}>
             <div className={`${sk} h-20 rounded-none`} />
             <div className="p-3 space-y-2 bg-card">
@@ -478,8 +582,13 @@ function LoadingSkeleton({ t }) {
         ))}
       </div>
 
-      {/* Controls */}
       <div className="border rounded-2xl p-4 space-y-3" style={{ animation: "skeletonFadeUp 0.4s ease 0.45s both" }}>
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {[80,96,72,88,76,90,70,84].map((w, i) => (
+            <div key={i} className={`${sk} h-7 rounded-full shrink-0`} style={{ width: w }} />
+          ))}
+        </div>
+        <div className={`${sk} h-px w-full`} />
         <div className="flex gap-2.5"><div className={`${sk} h-9 flex-1`} /><div className={`${sk} h-9 flex-[2]`} /><div className={`${sk} h-9 w-9`} /></div>
         <div className={`${sk} h-9 w-full`} />
       </div>
